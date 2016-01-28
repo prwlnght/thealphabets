@@ -1,6 +1,7 @@
 package cse535.asu.com.assignment1;
 
 import android.os.Bundle;
+import java.util.Random;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -31,15 +33,43 @@ public class MainActivity extends AppCompatActivity {
            // }
         //});
 
-        GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[] {
-                new DataPoint(0, 1),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6)
+        Button startButton = (Button)findViewById(R.id.startbutton);
+        startButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GraphView graph = (GraphView) findViewById(R.id.graph);
+
+                LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
+                        new DataPoint(0, 1),
+                        new DataPoint(1, 5),
+                        new DataPoint(2, 3),
+                        new DataPoint(3, 2),
+                        new DataPoint(4, 6)
+                });
+                double graph2LastXValue = 5d;
+                graph.addSeries(series);
+                LineGraphSeries<DataPoint> mSeries2 = new LineGraphSeries<DataPoint>();
+                mSeries2.appendData(new DataPoint(graph2LastXValue, getRandom()), true, 40);
+                graph.setTitle("Health Monitoring");
+
+            }
+
         });
-        graph.addSeries(series);
+
+        Button stopButton = (Button)findViewById(R.id.stopbutton);
+        stopButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View v) {
+
+               GraphView graph = (GraphView) findViewById(R.id.graph);
+
+                graph.removeAllSeries();
+            }
+        });
+
+
+
     }
 
     @Override
@@ -62,5 +92,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private double getRandom() {
+        double mLastRandom = 2;
+        Random mRand = new Random();
+        return mLastRandom += mRand.nextDouble()*0.5 - 0.25;
     }
 }
