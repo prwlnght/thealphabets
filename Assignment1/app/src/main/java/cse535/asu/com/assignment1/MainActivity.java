@@ -14,6 +14,7 @@ import android.widget.Button;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.GridLabelRenderer;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +33,11 @@ public class MainActivity extends AppCompatActivity {
              //           .setAction("Action", null).show();
            // }
         //});
+        GraphView graph = (GraphView) findViewById(R.id.graph);
+        graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
+        graph.setTitle("Health Monitoring");
+        graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
+
 
         Button startButton = (Button)findViewById(R.id.startbutton);
         startButton.setOnClickListener(new View.OnClickListener() {
@@ -50,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
                 graph.addSeries(series);
                 LineGraphSeries<DataPoint> mSeries2 = new LineGraphSeries<DataPoint>();
                 mSeries2.appendData(new DataPoint(graph2LastXValue, getRandom()), true, 40);
-                graph.setTitle("Health Monitoring");
 
             }
 
