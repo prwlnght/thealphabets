@@ -27,11 +27,11 @@ public class MainActivity extends AppCompatActivity {
 
         //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         //fab.setOnClickListener(new View.OnClickListener() {
-           // @Override
-           // public void onClick(View view) {
-          //      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-             //           .setAction("Action", null).show();
-           // }
+        // @Override
+        // public void onClick(View view) {
+        //      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+        //           .setAction("Action", null).show();
+        // }
         //});
         GraphView graph = (GraphView) findViewById(R.id.graph);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v) {
 
-               GraphView graph = (GraphView) findViewById(R.id.graph);
+                GraphView graph = (GraphView) findViewById(R.id.graph);
 
                 graph.removeAllSeries();
             }
