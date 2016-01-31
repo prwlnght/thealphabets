@@ -12,34 +12,76 @@
     tools:context="cse535.asu.com.assignment1.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <LinearLayout
+    <GridLayout
         android:id="@+id/editTexts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:columnCount="3"
+        android:rowCount="3"
+        android:columnOrderPreserved="false"
+        android:orientation="horizontal"
+        tools:context=".GridXMLActivity" >
 
-        <EditText
-            android:id="@+id/EditText01"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_Patient_Id" />
 
         <EditText
             android:id="@+id/EditText02"
-            android:layout_width="104dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_Age" />
+            android:ems="5"
+            android:hint="@string/hint_Age"
+            android:layout_row="0"
+            android:layout_column="0"/>
+
 
         <EditText
-            android:id="@+id/edit_message"
-            android:layout_width="146dp"
+            android:id="@+id/EditText01"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="@string/hint_Patient_Name" />
+            android:ems="5"
+            android:hint="@string/hint_Patient_Id"
+            android:layout_row="0"
+            android:layout_column="1"/>
 
-    </LinearLayout>
+        <EditText
+            android:id="@+id/EditText03"
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:ems="5"
+            android:hint="@string/hint_Patient_Name"
+            android:layout_row="0"
+            android:layout_column="2"/>
+
+        <TextView
+            android:id="@+id/Gender"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Gender"
+            android:textSize="16dp"
+            android:layout_row="1"
+            android:layout_column="0"/>
+
+        <RadioGroup android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton android:id="@+id/male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:onClick="onRadioButtonClicked"/>
+            <RadioButton android:id="@+id/other"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Other"
+                android:onClick="onRadioButtonClicked"/>
+
+        </RadioGroup>
+
+    </GridLayout>
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="331dp"
