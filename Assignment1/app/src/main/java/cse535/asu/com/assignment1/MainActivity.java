@@ -1,12 +1,16 @@
 package cse535.asu.com.assignment1;
 
 import java.util.Random;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import java.util.Random;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.animation.Animation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.view.View;
 import android.view.Menu;
@@ -53,6 +57,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
+                InputMethodManager inputManager = (InputMethodManager)
+                        getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                        InputMethodManager.HIDE_NOT_ALWAYS);
 
                 EditText editText = (EditText) findViewById(R.id.editText);
                 String name = editText.getText().toString();
@@ -102,6 +112,20 @@ public class MainActivity extends AppCompatActivity {
                 else {
 
                         GraphView graph = (GraphView) findViewById(R.id.graph);
+                    graph.setTitle("Health Data for" + name);
+                    graph.setBackgroundColor(Color.argb(60, 255, 0, 255 ));
+                    graph.setTitleColor(Color.MAGENTA);
+                    graph.getViewport().setScalable(true);
+                    graph.getViewport().setScrollable(true);
+                    graph.getViewport().setXAxisBoundsManual(true);
+                    graph.getViewport().setMinX(0);
+                    graph.getViewport().setMaxX(120);
+
+
+                        //GridLabelRenderer(graph);
+
+
+
 
 
                         double data;
@@ -114,11 +138,20 @@ public class MainActivity extends AppCompatActivity {
 
                         for (int i = 0; i < 100; i++) {
                             data = generator.nextDouble() * 0.5;
-                            mSeries2.appendData(new DataPoint(graph2LastXValue, data), true, 100);
+                            mSeries2.appendData(new DataPoint(graph2LastXValue, data), true, 101);
                             graph2LastXValue += 1d;
 
                         }
-                        graph.addSeries(mSeries2);
+                    graph.addSeries(mSeries2);
+                    mSeries2.setColor(Color.MAGENTA);
+                    mSeries2.setBackgroundColor(Color.GRAY);
+                    mSeries2.setThickness(2);
+                    mSeries2.setDrawBackground(true);
+                    mSeries2.setDrawBackground(true);
+                    mSeries2.setDataPointsRadius(10);
+
+
+
 
                 }
             }
