@@ -1,15 +1,21 @@
 package cse535.asu.com.assignment1;
 
+import java.util.Random;
 import android.os.Bundle;
 import java.util.Random;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.EditText;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.RadioGroup;
+import android.widget.RadioButton;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
@@ -35,28 +41,86 @@ public class MainActivity extends AppCompatActivity {
         //});
         GraphView graph = (GraphView) findViewById(R.id.graph);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
+        graph.getGridLabelRenderer().setVerticalAxisTitle("Rate");
         graph.setTitle("Health Monitoring");
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
+        final String[][] str = {{"Alice","83","1"},{"Bob","7","0"},{"Mallory", "42","2"},{"Carol", "43", "1"},{"Dave", "91", "0"},{"Eve", "66", "1"},{"Walter", "77", "0"},{"Peggy", "65","2"},{"Trent", "21","0"},{"Peggy", "71","2"}};
+
 
 
         Button startButton = (Button)findViewById(R.id.startbutton);
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                GraphView graph = (GraphView) findViewById(R.id.graph);
 
-                LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                        new DataPoint(0, 1),
-                        new DataPoint(1, 5),
-                        new DataPoint(2, 3),
-                        new DataPoint(3, 2),
-                        new DataPoint(4, 6)
-                });
-                double graph2LastXValue = 5d;
-                graph.addSeries(series);
-                LineGraphSeries<DataPoint> mSeries2 = new LineGraphSeries<DataPoint>();
-                mSeries2.appendData(new DataPoint(graph2LastXValue, getRandom()), true, 40);
 
+                EditText editText = (EditText) findViewById(R.id.editText);
+                String name = editText.getText().toString();
+                EditText editText01 = (EditText) findViewById(R.id.EditText01);
+                Integer id = Integer.parseInt(editText01.getText().toString());
+                EditText editText02= (EditText) findViewById(R.id.EditText02);
+                String age = editText02.getText().toString();
+
+                RadioButton male = (RadioButton) findViewById(R.id.male);
+                RadioButton female = (RadioButton) findViewById(R.id.female);
+                RadioButton other = (RadioButton) findViewById(R.id.other);
+
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                alertDialog.setTitle("ERROR!!!");
+                alertDialog.setMessage("Please Enter Valid Data");
+
+                RadioGroup gender = (RadioGroup) findViewById(R.id.radioGroup);
+                int genderId = gender.getCheckedRadioButtonId();
+                Integer gen;
+
+                if(genderId==male.getId()){
+                    gen=0;
+                }
+                else if(genderId==female.getId()){
+                    gen=1;
+                }
+                else{
+                    gen=2;
+                }
+                String input_name = name;
+                String input_age = age;
+                int input_gender = gen;
+
+                if(id<=0 || id>10||str[id-1][0].equals(input_name)==false || str[id-1][1].equals(input_age)==false || Integer.parseInt(str[id-1][2])!=input_gender){
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                    GraphView graph = (GraphView) findViewById(R.id.graph);
+
+                    graph.removeAllSeries();
+                    alertDialog.show();
+
+                }
+                else {
+
+                        GraphView graph = (GraphView) findViewById(R.id.graph);
+
+
+                        double data;
+                        System.out.println("name: " + name + " age: " + age + " id: " + id + " gender: " + genderId);
+
+                        double graph2LastXValue = 0d;
+
+                        Random generator = new Random(id);
+                        LineGraphSeries<DataPoint> mSeries2 = new LineGraphSeries<DataPoint>();
+
+                        for (int i = 0; i < 100; i++) {
+                            data = generator.nextDouble() * 0.5;
+                            mSeries2.appendData(new DataPoint(graph2LastXValue, data), true, 100);
+                            graph2LastXValue += 1d;
+
+                        }
+                        graph.addSeries(mSeries2);
+
+                }
             }
 
         });
