@@ -1,22 +1,21 @@
 package cse535.asu.com.assignment1;
 
+/**
+ *
+ * @author Shweta Choudhary, Prajwal Paudyal, Shibani Singh
+ * @version February 2, 2016
+ * Assignment 1 CSE 535 Mobile Computing
+ *
+ */
+
 import java.util.Random;
 
 import android.graphics.Color;
 import android.os.Bundle;
-
-import java.util.Random;
-
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.view.View;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RadioButton;
@@ -39,18 +38,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //setSupportActionBar(toolbar);
 
-        //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        //fab.setOnClickListener(new View.OnClickListener() {
-        // @Override
-        // public void onClick(View view) {
-        //      Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-        //           .setAction("Action", null).show();
-        // }
-        //});
-        GraphView graph = (GraphView) findViewById(R.id.graph);
+        GraphView graph = (GraphView) findViewById(R.id.GraphHM);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Rate");
         graph.setTitle("Health Monitoring");
@@ -70,18 +59,18 @@ public class MainActivity extends AppCompatActivity {
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
-                EditText editText = (EditText) findViewById(R.id.editText);
-                String name = editText.getText().toString();
-                EditText editText01 = (EditText) findViewById(R.id.EditText01);
-                Integer id = Integer.parseInt(editText01.getText().toString());
-                EditText editText02 = (EditText) findViewById(R.id.EditText02);
-                String age = editText02.getText().toString();
+                EditText PatientName = (EditText) findViewById(R.id.PatientName);
+                String name = PatientName.getText().toString();
+                EditText PatientID = (EditText) findViewById(R.id.PatientID);
+                Integer id = Integer.parseInt(PatientID.getText().toString());
+                EditText Age = (EditText) findViewById(R.id.Age);
+                String age = Age.getText().toString();
 
                 RadioButton male = (RadioButton) findViewById(R.id.male);
                 RadioButton female = (RadioButton) findViewById(R.id.female);
                 RadioButton other = (RadioButton) findViewById(R.id.other);
 
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create(); // http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
                 alertDialog.setTitle("ERROR!!!");
                 alertDialog.setMessage("Please Enter Valid Data");
 
@@ -107,14 +96,14 @@ public class MainActivity extends AppCompatActivity {
                                     dialog.dismiss();
                                 }
                             });
-                    GraphView graph = (GraphView) findViewById(R.id.graph);
+                    GraphView graph = (GraphView) findViewById(R.id.GraphHM);
 
                     graph.removeAllSeries();
                     alertDialog.show();
 
                 } else {
 
-                    GraphView graph = (GraphView) findViewById(R.id.graph);
+                    GraphView graph = (GraphView) findViewById(R.id.GraphHM);
                     graph.setTitle("Health Data for " + name);
                     graph.setBackgroundColor(Color.argb(60, 255, 0, 255));
                     graph.setTitleColor(Color.BLACK);
@@ -125,12 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     graph.getViewport().setMaxX(120);
 
 
-                    //GridLabelRenderer(graph);
-
-
                     double data;
-                    //System.out.println("name: " + name + " age: " + age + " id: " + id + " gender: " + genderId);
-
                     double graph2LastXValue = 0d;
 
                     Random generator = new Random(id);
@@ -146,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
                     mSeries2.setColor(Color.BLACK);
                     mSeries2.setBackgroundColor(Color.GRAY);
                     mSeries2.setThickness(5);
-                    //mSeries2.setDrawBackground(true);
                     mSeries2.setDataPointsRadius(10);
 
 
@@ -161,35 +144,13 @@ public class MainActivity extends AppCompatActivity {
 
             public void onClick(View v) {
 
-                GraphView graph = (GraphView) findViewById(R.id.graph);
+                GraphView graph = (GraphView) findViewById(R.id.GraphHM);
 
                 graph.removeAllSeries();
             }
         });
 
 
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     private double getRandom() {
