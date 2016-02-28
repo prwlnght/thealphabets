@@ -19,7 +19,7 @@
         android:orientation="vertical" >
 
         <EditText
-            android:id="@+id/EditText01"
+            android:id="@+id/PatientID"
             android:layout_width="151dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -28,19 +28,31 @@
             android:maxLength="2"/>
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/PatientName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/hint_Patient_Name"
-             />
+            />
+
+        <EditText
+            android:id="@+id/Age"
+            android:layout_width="104dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/hint_Age"
+            android:layout_below="@+id/editTexts"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:digits="0123456789"
+            android:maxLength="2"/>
 
     </LinearLayout>
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="wrap_content"
         android:layout_height="250dp"
-        android:id="@+id/graph"
+        android:id="@+id/GraphHM"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="false"
         android:layout_alignParentStart="true"
@@ -52,7 +64,7 @@
         android:text="Start"
         android:id="@+id/startbutton"
         android:layout_gravity="right"
-        android:layout_alignTop="@+id/stopbutton"
+        android:layout_below="@+id/editTexts"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -61,22 +73,11 @@
         android:layout_height="wrap_content"
         android:text="Stop "
         android:id="@+id/stopbutton"
-        android:layout_marginBottom="43dp"
-        android:layout_above="@+id/graph"
+        android:layout_below="@+id/editTexts"
         android:layout_centerHorizontal="true" />
 
 
-    <EditText
-        android:id="@+id/EditText02"
-        android:layout_width="104dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/hint_Age"
-        android:layout_below="@+id/editTexts"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:digits="0123456789"
-        android:maxLength="2"/>
+
 
     <RadioGroup
         android:layout_width="match_parent"
