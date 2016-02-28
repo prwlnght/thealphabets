@@ -9,6 +9,13 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.List;
+
+import eu.darken.myolib.Myo;
+import eu.darken.myolib.MyoCmds;
+import eu.darken.myolib.MyoConnector;
+import eu.darken.myolib.msgs.MyoMsg;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -26,6 +33,23 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        MyoConnector connector = new MyoConnector(this);
+        connector.scan(5000, new MyoConnector.ScannerCallback(){
+
+            @Override
+            public void onScanFinished(List<Myo> myos) {
+                Myo myo = myos.get(2);
+                myo.connect();
+                myo.writeUnlock(MyoCmds.UnlockType.HOLD, new Myo.MyoCommandCallback() {
+                    @Override
+                    public void onCommandDone(Myo myo, MyoMsg msg) {
+                        myo.writeVibrate(MyoCmds.VibrateType.LONG, null);
+                    }
+                });
+            }
+        });
+
     }
 
     @Override
