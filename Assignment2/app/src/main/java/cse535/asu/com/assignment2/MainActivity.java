@@ -30,7 +30,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener{
+public class MainActivity extends AppCompatActivity implements SensorEventListener
+{
 
     //Global variables
     private final String DATABASE_NAME = "Patient_Info_Database";
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mAccelerometer;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -68,13 +70,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //register the sensors
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        mSensorManager.registerListener()
+        mSensorManager.registerListener();
 
-        Button startButton = (Button)findViewById(R.id.startbutton);
-        startButton.setOnClickListener(new View.OnClickListener() {
+        final Button runButton = (Button)findViewById(R.id.runbutton);
+        runButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
 
                 InputMethodManager inputManager = (InputMethodManager)
                         getSystemService(MainActivity.INPUT_METHOD_SERVICE);
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 String name = editText.getText().toString();
                 EditText editText01 = (EditText) findViewById(R.id.EditText01);
                 Integer id = Integer.parseInt(editText01.getText().toString());
-                EditText editText02= (EditText) findViewById(R.id.EditText02);
+                EditText editText02 = (EditText) findViewById(R.id.EditText02);
                 String age = editText02.getText().toString();
 
                 RadioButton male = (RadioButton) findViewById(R.id.male);
@@ -101,20 +102,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 int genderId = gender.getCheckedRadioButtonId();
                 Integer gen;
 
-                if(genderId==male.getId()){
-                    gen=0;
+                if (genderId == male.getId()) {
+                    gen = 0;
+                } else if (genderId == female.getId()) {
+                    gen = 1;
+                } else {
+                    gen = 2;
                 }
-                else if(genderId==female.getId()){
-                    gen=1;
-                }
-                else{
-                    gen=2;
-                }
+
                 String input_name = name;
                 String input_age = age;
                 int input_gender = gen;
 
-                if(id<=0 || id>10||str[id-1][0].equals(input_name)==false || str[id-1][1].equals(input_age)==false || Integer.parseInt(str[id-1][2])!=input_gender){
+                if (id <= 0 || id > 10 || str[id - 1][0].equals(input_name) == false || str[id - 1][1].equals(input_age) == false || Integer.parseInt(str[id - 1][2]) != input_gender) {
                     alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -126,12 +126,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     graph.removeAllSeries();
                     alertDialog.show();
 
-                }
-                else {
+                } else {
 
-                        GraphView graph = (GraphView) findViewById(R.id.graph);
+                    GraphView graph = (GraphView) findViewById(R.id.graph);
                     graph.setTitle("Health Data for" + name);
-                    graph.setBackgroundColor(Color.argb(60, 255, 0, 255 ));
+                    graph.setBackgroundColor(Color.argb(60, 255, 0, 255));
                     graph.setTitleColor(Color.MAGENTA);
                     graph.getViewport().setScalable(true);
                     graph.getViewport().setScrollable(true);
@@ -140,26 +139,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     graph.getViewport().setMaxX(120);
 
 
-                        //GridLabelRenderer(graph);
+                    //GridLabelRenderer(graph);
 
+                    double data;
+                    System.out.println("name: " + name + " age: " + age + " id: " + id + " gender: " + genderId);
 
+                    double graph2LastXValue = 0d;
 
+                    Random generator = new Random(id);
+                    LineGraphSeries<DataPoint> mSeries2 = new LineGraphSeries<DataPoint>();
 
+                    for (int i = 0; i < 100; i++) {
+                        data = generator.nextDouble() * 0.5;
+                        mSeries2.appendData(new DataPoint(graph2LastXValue, data), true, 101);
+                        graph2LastXValue += 1d;
 
-                        double data;
-                        System.out.println("name: " + name + " age: " + age + " id: " + id + " gender: " + genderId);
-
-                        double graph2LastXValue = 0d;
-
-                        Random generator = new Random(id);
-                        LineGraphSeries<DataPoint> mSeries2 = new LineGraphSeries<DataPoint>();
-
-                        for (int i = 0; i < 100; i++) {
-                            data = generator.nextDouble() * 0.5;
-                            mSeries2.appendData(new DataPoint(graph2LastXValue, data), true, 101);
-                            graph2LastXValue += 1d;
-
-                        }
+                    }
                     graph.addSeries(mSeries2);
                     mSeries2.setColor(Color.MAGENTA);
                     mSeries2.setBackgroundColor(Color.GRAY);
@@ -168,19 +163,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     mSeries2.setDrawBackground(true);
                     mSeries2.setDataPointsRadius(10);
 
-
-
-
                 }
             }
 
         });
 
-        Button stopButton = (Button)findViewById(R.id.stopbutton);
-        stopButton.setOnClickListener(new View.OnClickListener() {
+        final Button clearButton = (Button)findViewById(R.id.clearbutton);
+        clearButton.setOnClickListener(new View.OnClickListener()
+        {
             @Override
 
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
 
                 GraphView graph = (GraphView) findViewById(R.id.graph);
 
@@ -188,19 +182,67 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             }
         });
 
+        final Button stopButton = (Button)findViewById(R.id.stopbutton);
+        stopButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+
+            public void onClick(View v)
+            {
+
+                //Put code to stop reading accelerometer values and end write db connection
+            }
+        });
+
+        Button startButton = (Button)findViewById(R.id.startbutton);
+        startButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+
+            public void onClick(View v)
+            {
+
+                //Put code to start accelerometer reading and write to database
+
+                new Thread(new Runnable() {
+                    public void run()
+                    {
+                        runButton.setSaveEnabled(false);
+                        clearButton.setSaveEnabled(false);
+                        stopButton.setSaveEnabled(false);
+                        try
+                        {
+                            Thread.sleep(1000);
+                        }
+                        catch (Exception e)
+                        {
+                            e.getLocalizedMessage();
+                        }
+                        runButton.setSaveEnabled(true);
+                        clearButton.setSaveEnabled(true);
+                        stopButton.setSaveEnabled(true);
+
+                    }
+
+                }).start();
+
+            }
+        });
 
 
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     //This get the accls values and puts in in the database
-    public void startAcclService(View view){
+    public void startAcclService(View view)
+    {
 
         //put all this in a method in a thread
         mSensorManager.registerListener(this, mAccelerometer, 1000000);
@@ -245,8 +287,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     //This function is the one that 'starts the graph' **This might not be needed. If not needed for
     //final implementation, move the logic to the onclick listener.
-    public void initializeGraph(){
-
+    public void initializeGraph()
+    {
 
 
     }
@@ -254,7 +296,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -268,39 +311,49 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return super.onOptionsItemSelected(item);
     }
 
-    private double getRandom() {
+    private double getRandom()
+    {
         double mLastRandom = 2;
         Random mRand = new Random();
         return mLastRandom += mRand.nextDouble()*0.5 - 0.25;
     }
 
     @Override
-    public void onSensorChanged(SensorEvent event) {
+    public void onSensorChanged(SensorEvent event)
+    {
 
     }
 
     @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    public void onAccuracyChanged(Sensor sensor, int accuracy)
+    {
 
     }
 
-    private void writeToTable(double[] xArray, double[] yArray, double[] zArray) {
+    private void writeToTable(double[] xArray, double[] yArray, double[] zArray)
+    {
         //
         //databaseLocked = true;
         SQLiteDatabase db = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.OPEN_READWRITE);
         Log.i("writeTable", "in WriteTable");
 
-        for (int counter = 0; counter < xArray.length; counter++){
+        for (int counter = 0; counter < xArray.length; counter++)
+        {
             db.beginTransaction();
-            try{//make table name global
+            try
+            {//make table name global
                 db.execSQL("insert into " + tableName + "(xValues, yValues, xValues) values ("+ (double)xArray[counter] + ", " + (double)yArray[counter] + ", " + (double)zArray[counter] + ");");
                 //Log.i("DatabaseWriter", "Writing" + xObject[counter] + ", " + yObjects[counter] + ", " + zObjects[counter] + ");" );
                 //db.execSQL(INSERT_DUMMY_VALUES_SQL);
                 db.setTransactionSuccessful();
                 //databasePopulatedFlag = true;
-            }catch(SQLiteException e){
+            }
+            catch(SQLiteException e)
+            {
                 Log.i("Database", e.getMessage());
-            }finally{
+            }
+            finally
+            {
                 db.endTransaction();
             }
         }
@@ -308,7 +361,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    public void createTable(){
+    public void createTable()
+    {
         //create the database
 
         SQLiteDatabase db = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.CREATE_IF_NECESSARY);
@@ -322,13 +376,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //String INSERT_DUMMY_VALUES_SQL = "insert into " + tableName + "(xValues, yValues, xValues) values (12, 13, 14);";
 
         db.beginTransaction();
-        try{
+        try
+        {
             db.execSQL(CREATE_TABLE_SQL);
             //db.execSQL(INSERT_DUMMY_VALUES_SQL);
             db.setTransactionSuccessful();
-        }catch(SQLiteException e){
+        }
+        catch(SQLiteException e)
+        {
             Log.i("Database", e.getMessage());
-        }finally{
+        }
+        finally
+        {
             db.endTransaction();
             tableCreated = true;
             db.close();
