@@ -127,7 +127,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
         int maxBufferSize = 1 * 1024 * 1024;
-
         File sourceFile = new File(sourceFileUri);
         if (!sourceFile.isFile()) {
 
@@ -239,11 +238,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
-    int downloadedSize = 0;
-    int totalSize = 0;
-    String dwnload_file_path = "https://impact.asu.edu/Appenstance/Download/cksum.c";
 
-    void downloadFile(){
+    void downloadFile(String destFileUri){
+        int downloadedSize = 0;
+        int totalSize = 0;
+        String dwnload_file_path = "https://impact.asu.edu/Appenstance/Assignment2DB";
 
         try {
             URL url = new URL(dwnload_file_path);
@@ -252,15 +251,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             urlConnection.setRequestMethod("GET");
             urlConnection.setDoOutput(true);
 
-            //connect
-            urlConnection.connect();
-
-            //set the path where we want to save the file
-            File SDCardRoot = Environment.getExternalStorageDirectory();
-            //create a new file, to save the downloaded file
-            File file = new File(SDCardRoot,"downloaded_file1.c");
-
-            FileOutputStream fileOutput = new FileOutputStream(file);
             TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -288,6 +278,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
+
+
+            //connect
+            urlConnection.connect();
+            File destFile = new File(destFileUri);
+
+            verifyStoragePermissions(MainActivity.this);
+            FileOutputStream fileOutput = new FileOutputStream(destFile);
             //Stream used for reading the data from the internet
             InputStream inputStream = urlConnection.getInputStream();
 
@@ -303,8 +301,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 downloadedSize += bufferLength;
 
             }
+            System.out.println("Downloaded size: "+ downloadedSize);
             //close the output stream when complete //
             fileOutput.close();
+            System.out.println("File Downloaded");
 
         } catch (final MalformedURLException e) {
             showError("Error : MalformedURLException " + e);
@@ -396,7 +396,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 new Thread(new Runnable() {
                     public void run() {
-                        downloadFile();
+                        downloadFile(DATABASE_LOCATION);
                     }
                 }).start();
             }
