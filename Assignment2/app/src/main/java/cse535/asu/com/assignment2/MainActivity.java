@@ -1,5 +1,15 @@
 package cse535.asu.com.assignment2;
 
+
+/**
+ *
+ * @author Shweta Choudhary, Prajwal Paudyal, Shibani Singh
+ * @version March 14, 2016
+ * Assignment 2 CSE 535 Mobile Computing
+ *
+ */
+
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
@@ -79,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Integer id;
     private String tableName;
     private boolean tableCreated;
-    Button uploadbutton;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -205,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 }
 
-                // send multipart form data necesssary after file data...
+                // send multipart form data necessary after file data...
                 dos.writeBytes(lineEnd);
                 dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
 
@@ -242,15 +251,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     void downloadFile(String destFileUri){
         int downloadedSize = 0;
         int totalSize = 0;
-        String dwnload_file_path = "https://impact.asu.edu/Appenstance/Assignment2DB";
+        String dwnload_file_path = "https://impact.asu.edu/Appenstance/Group1DB";
 
         try {
             URL url = new URL(dwnload_file_path);
+            System.out.println("11111");
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setDoOutput(true);
-
+            System.out.println("22222");
             TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -266,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     // Not implemented
                 }
             } };
-
+            System.out.println("33333");
             try {
                 SSLContext sc = SSLContext.getInstance("TLS");
 
@@ -278,10 +285,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
-
-
+            System.out.println("44444");
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoOutput(true);
+            System.out.println("55555");
             //connect
             urlConnection.connect();
+            System.out.println("66666");
             File destFile = new File(destFileUri);
 
             verifyStoragePermissions(MainActivity.this);
@@ -355,13 +365,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         }
-        DATABASE_LOCATION = SDCARD_LOCATION + "/Assignment2DB";
+        DATABASE_LOCATION = SDCARD_LOCATION + "/Group1DB";
         System.out.println(DATABASE_LOCATION);
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Time");
         graph.getGridLabelRenderer().setVerticalAxisTitle("Rate");
-        graph.setTitle("Health Monitoring");
+        graph.setTitle("Accelerometer Data");
         graph.getGridLabelRenderer().setGridStyle(GridLabelRenderer.GridStyle.HORIZONTAL);
 
         //register the sensors
@@ -417,6 +427,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create(); // http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+                alertDialog.setTitle("ERROR!!!");
+                alertDialog.setMessage("Please Enter Valid Data");
+
                 EditText patientName = (EditText) findViewById(R.id.editText);
                 name = patientName.getText().toString();
                 EditText patientID = (EditText) findViewById(R.id.EditText01);
@@ -424,6 +438,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 EditText patientAge = (EditText) findViewById(R.id.EditText02);
                 age = patientAge.getText().toString();
 
+                if (id <= 0 || id > 10 || name == "" || age == "")
+                {
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                }
                 RadioButton male = (RadioButton) findViewById(R.id.male);
                 RadioButton female = (RadioButton) findViewById(R.id.female);
                 RadioButton other = (RadioButton) findViewById(R.id.other);
@@ -443,6 +466,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 {
                     gender_string = "other";
                 }
+
 
                 tableName = name
                         + "_" + id
@@ -494,7 +518,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             graph.getViewport().setScrollable(true);
                             graph.getViewport().setXAxisBoundsManual(true);
                             graph.getViewport().setMinX(0);
-                            graph.getViewport().setMaxX(15);
+                            graph.getViewport().setMaxX(10);
 
                             graph.addSeries(mSeriesX);
                             graph.addSeries(mSeriesY);
@@ -557,13 +581,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 //Toast.makeText(MainActivity.this, "Waiting for db update", Toast.LENGTH_LONG).show();
 
 
-                //TODO put some ty catch magic here, Alert Dialog for invalid Values
+                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create(); // http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
+                alertDialog.setTitle("ERROR!!!");
+                alertDialog.setMessage("Please Enter Valid Data");
+
                 EditText patientName = (EditText) findViewById(R.id.editText);
                 name = patientName.getText().toString();
                 EditText patientID = (EditText) findViewById(R.id.EditText01);
                 id = Integer.parseInt(patientID.getText().toString());
                 EditText patientAge = (EditText) findViewById(R.id.EditText02);
                 age = patientAge.getText().toString();
+
+                if (id <= 0 || id > 10 || name == "" || age == "")
+                {
+                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            });
+                }
 
                 RadioButton male = (RadioButton) findViewById(R.id.male);
                 RadioButton female = (RadioButton) findViewById(R.id.female);
@@ -578,12 +615,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
                 else if (genderId == female.getId())
                 {
-                            gender_string = "female";
+                    gender_string = "female";
                 }
                 else
                 {
                     gender_string = "other";
                 }
+
 
                 tableName = name
                         + "_" + id
@@ -616,7 +654,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 };
 
                 Handler handler = new Handler();
-                handler.postDelayed(runnable, 10000);
+                handler.postDelayed(runnable, 100);
 
             }
         });
@@ -697,8 +735,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         SQLiteDatabase db;
 
 
-            //db = this.openOrCreateDatabase(DATABASE_LOCATION, MODE_PRIVATE, null);
-           db = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+        //db = this.openOrCreateDatabase(DATABASE_LOCATION, MODE_PRIVATE, null);
+        db = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.CREATE_IF_NECESSARY);
         //}
         /*catch(SQLiteException se){
 
@@ -706,10 +744,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }*/
         Log.i("createTable", "in CreateTable");
         String CREATE_TABLE_SQL = "create table if not exists " + tableName + " ("
-                        + "timeStamp integer PRIMARY KEY autoincrement, "
-                        + "xValues double, "
-                        + "yValues double, "
-                        + "zValues double ); ";
+                + "timeStamp integer PRIMARY KEY autoincrement, "
+                + "xValues double, "
+                + "yValues double, "
+                + "zValues double ); ";
 
         db.beginTransaction();
         try
