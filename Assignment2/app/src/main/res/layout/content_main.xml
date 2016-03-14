@@ -137,6 +137,28 @@
         android:layout_toLeftOf="@+id/radioGroup"
         android:layout_alignLeft="@+id/stopbutton"
         android:layout_alignStart="@+id/stopbutton" />
+        
+     <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Upload"
+        android:id="@+id/uploadButton"
+        android:layout_above="@+id/startbutton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download"
+        android:id="@+id/downloadButton"
+        android:onClick="downloadFile"
+        android:layout_above="@+id/stopbutton"
+        android:layout_alignLeft="@+id/stopbutton"
+        android:layout_alignStart="@+id/stopbutton" />
+
 
 
 </RelativeLayout>
