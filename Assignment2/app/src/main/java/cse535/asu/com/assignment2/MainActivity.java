@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import java.io.File;
 
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -27,6 +28,7 @@ import android.database.Cursor;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
@@ -47,11 +49,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+        System.out.println("Hi, Launching App");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //Things for initializing graphs
-        SDCARD_LOCATION = Environment.getExternalStorageDirectory().getPath();
+        SDCARD_LOCATION = Environment.getExternalStorageDirectory().getAbsolutePath();
+
+        if (android.os.Build.DEVICE.contains("samsung")
+                || android.os.Build.MANUFACTURER.contains("samsung")) {
+            File f = new File(Environment.getExternalStorageDirectory()
+                    .getParent() + "/extSdCard" + "/myDirectory");
+            if (f.exists() && f.isDirectory()) {
+                SDCARD_LOCATION = Environment.getExternalStorageDirectory()
+                        .getParent() + "/extSdCard";
+            } else {
+                f = new File(Environment.getExternalStorageDirectory()
+                        .getAbsolutePath() + "/external_sd" + "/myDirectory");
+                if (f.exists() && f.isDirectory()) {
+                    SDCARD_LOCATION = Environment
+                            .getExternalStorageDirectory().getAbsolutePath()
+                            + "/external_sd";
+                }
+            }
+        }
         DATABASE_LOCATION = SDCARD_LOCATION + "/Assignment2DB";
         System.out.println(DATABASE_LOCATION);
 
@@ -112,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         + "_" + gender_string;
 
                 final SQLiteDatabase db1 = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.OPEN_READWRITE);
+                //final SQLiteDatabase db1 = this.openOrCreateDatabase(DATABASE_LOCATION,MODE_ENABLE_WRITE_AHEAD_LOGGING,null);
                 final String readQuery = "SELECT xValues, yValues, zValues FROM " + tableName +
                         " LIMIT 10 OFFSET (SELECT COUNT(*) FROM " + tableName + " )-10";
 
@@ -147,14 +170,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             }
 
                             GraphView graph = (GraphView) findViewById(R.id.graph);
-                            graph.setTitle("Health Data for" + name);
+                            graph.removeAllSeries();
+                            graph.setTitle("Accelerometer data  for " + name);
                             graph.setBackgroundColor(Color.argb(60, 255, 0, 255));
                             graph.setTitleColor(Color.MAGENTA);
                             graph.getViewport().setScalable(true);
                             graph.getViewport().setScrollable(true);
                             graph.getViewport().setXAxisBoundsManual(true);
                             graph.getViewport().setMinX(0);
-                            graph.getViewport().setMaxX(120);
+                            graph.getViewport().setMaxX(15);
 
                             graph.addSeries(mSeriesX);
                             graph.addSeries(mSeriesY);
@@ -162,13 +186,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                             mSeriesX.setColor(Color.MAGENTA);
                             mSeriesY.setColor(Color.GREEN);
                             mSeriesZ.setColor(Color.BLUE);
-                            mSeriesX.setBackgroundColor(Color.GRAY);
-                            mSeriesX.setThickness(2);
-                            mSeriesY.setThickness(2);
-                            mSeriesZ.setThickness(2);
-                            mSeriesX.setDrawBackground(true);
-                            mSeriesX.setDrawBackground(true);
+                            mSeriesX.setThickness(4);
+                            mSeriesY.setThickness(4);
+                            mSeriesZ.setThickness(4);
                             mSeriesX.setDataPointsRadius(10);
+                            mSeriesX.setTitle("X");
+                            mSeriesY.setTitle("Y");
+                            mSeriesZ.setTitle("Z");
+                            graph.getLegendRenderer().setVisible(true);
+                            graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
 
                             c1.close();
                         }
@@ -212,16 +238,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v)
             {
 
-                Toast.makeText(MainActivity.this, "waiting for db update", Toast.LENGTH_LONG).show();
-                System.out.println("Waiting for DB Update");
+                //Toast.makeText(MainActivity.this, "Waiting for db update", Toast.LENGTH_LONG).show();
 
-                //createDatabase if not exist
-                SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.CREATE_IF_NECESSARY);
-                //SQLiteDatabase.openDatabase("/sdcard/Assigment2DB", null, SQLiteDatabase.CREATE_IF_NECESSARY);
 
-                System.out.println("Creating DB");
-
-                //TODO put some ty catch magic here.
+                //TODO put some ty catch magic here, Alert Dialog for invalid Values
                 EditText patientName = (EditText) findViewById(R.id.editText);
                 name = patientName.getText().toString();
                 EditText patientID = (EditText) findViewById(R.id.EditText01);
@@ -256,11 +276,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 createTable();
                 startAcclService();
+                startButton.setEnabled(false);
                 runButton.setEnabled(false);
                 clearButton.setEnabled(false);
                 stopButton.setEnabled(false);
 
-                Toast.makeText(MainActivity.this, "database creation is done", Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "database creation is done", Toast.LENGTH_LONG).show();
                 System.out.println("Database creation is done");
 
                 Runnable runnable = new Runnable()
@@ -268,10 +289,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     @Override
                     public void run()
                     {
+                        startButton.setEnabled(true);
                         runButton.setEnabled(true);
                         clearButton.setEnabled(true);
                         stopButton.setEnabled(true);
-                        Toast.makeText(MainActivity.this, "Good morning, where is my bacon", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MainActivity.this, "Good morning, where is my bacon", Toast.LENGTH_LONG).show();
                         System.out.println("Good Morning");
 
                     }
@@ -355,8 +377,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void createTable()
     {
         //create the database
+        System.out.println("Creating database");
+        SQLiteDatabase db;
 
-        SQLiteDatabase db = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+
+            //db = this.openOrCreateDatabase(DATABASE_LOCATION, MODE_PRIVATE, null);
+           db = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.CREATE_IF_NECESSARY);
+        //}
+        /*catch(SQLiteException se){
+
+            Toast.makeText(MainActivity.this, se.getMessage(), Toast.LENGTH_LONG).show();
+        }*/
         Log.i("createTable", "in CreateTable");
         String CREATE_TABLE_SQL = "create table if not exists " + tableName + " ("
                         + "timeStamp integer PRIMARY KEY autoincrement, "
@@ -374,6 +405,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         catch (SQLiteException e)
         {
             Log.i("Database", e.getMessage());
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
         }
         finally
         {
