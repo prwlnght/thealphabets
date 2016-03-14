@@ -15,8 +15,43 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import java.io.File;
 
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+
+
+import android.app.Dialog;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import android.view.Window;
+
+
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+import android.Manifest;
+import android.app.Activity;
+import android.support.v4.app.ActivityCompat;
+import android.content.pm.PackageManager;
+import java.io.BufferedWriter;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URLConnection;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -27,11 +62,10 @@ import android.widget.Toast;
 import android.database.Cursor;
 
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LegendRenderer;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
-
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener
 {
@@ -45,6 +79,253 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Integer id;
     private String tableName;
     private boolean tableCreated;
+    Button uploadbutton;
+
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    activity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
+
+    int serverResponseCode = 0;
+
+    // String upLoadServerUri = null;
+    final String upLoadServerUri = "https://impact.asu.edu/Appenstance/UploadToServer.php";
+
+
+    public int uploadFile(String sourceFileUri){
+
+        String fileName = sourceFileUri;
+        System.out.println("Location: " + sourceFileUri);
+        HttpsURLConnection conn = null;
+        DataOutputStream dos = null;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+
+        File sourceFile = new File(sourceFileUri);
+        if (!sourceFile.isFile()) {
+
+            System.out.println("File not found error");
+            Log.e("uploadFile", "Source File not exist :" + sourceFileUri );
+            return 0;
+
+        }
+        else
+        {
+            try {
+                System.out.println("Inside else, file found");
+                // open a URL connection to the Servlet
+                FileInputStream fileInputStream = new FileInputStream(sourceFile);
+                URL url = new URL(upLoadServerUri);
+                System.out.println("URL made");
+                // Open a HTTP  connection to  the URL
+                conn = (HttpsURLConnection) url.openConnection();
+                conn.setDoInput(true); // Allow Inputs
+                conn.setDoOutput(true); // Allow Outputs
+                conn.setUseCaches(false); // Don't use a Cached Copy
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Connection", "Keep-Alive");
+                conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                conn.setRequestProperty("uploaded_file", fileName);
+                TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+                    public X509Certificate[] getAcceptedIssuers() {
+                        return null;
+                    }
+                    @Override
+                    public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                        // Not implemented
+                    }
+                    @Override
+                    public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                        // Not implemented
+                    }
+                } };
+
+                try {
+                    SSLContext sc = SSLContext.getInstance("TLS");
+
+                    sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+                    HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+                } catch (KeyManagementException ex) {
+                    ex.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                dos = new DataOutputStream(conn.getOutputStream());
+                System.out.println("after DataOutputStream");
+
+                dos.writeBytes(twoHyphens + boundary + lineEnd);
+                dos.writeBytes("Content-Disposition: form-data; name=uploaded_file;"+"filename="
+                        + fileName + " " + lineEnd);
+
+                dos.writeBytes(lineEnd);
+
+                // create a buffer of  maximum size
+                bytesAvailable = fileInputStream.available();
+
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                buffer = new byte[bufferSize];
+
+                // read file and write it into form...
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                while (bytesRead > 0) {
+
+                    dos.write(buffer, 0, bufferSize);
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                }
+
+                // send multipart form data necesssary after file data...
+                dos.writeBytes(lineEnd);
+                dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+                // Responses from the server (code and message)
+                serverResponseCode = conn.getResponseCode();
+                String serverResponseMessage = conn.getResponseMessage();
+
+                Log.i("uploadFile", "HTTP Response is : "
+                        + serverResponseMessage + ": " + serverResponseCode);
+
+                if(serverResponseCode == 200){
+                    System.out.println("FILE UPLOADED");
+                }
+                //close the streams //
+                fileInputStream.close();
+                dos.flush();
+                dos.close();
+
+            } catch (MalformedURLException ex) {
+                ex.printStackTrace();
+                Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+            } catch (Exception e) {
+                e.printStackTrace();
+                Log.e("Upload file Exception", "Exception : " + e.getMessage(), e);
+            }
+
+            System.out.println("SERVER RESPONSE CODE : " + serverResponseCode);
+            return serverResponseCode;
+        } // End else block
+
+    }
+
+    int downloadedSize = 0;
+    int totalSize = 0;
+    String dwnload_file_path = "https://impact.asu.edu/Appenstance/Download/cksum.c";
+
+    void downloadFile(){
+
+        try {
+            URL url = new URL(dwnload_file_path);
+            HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
+
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoOutput(true);
+
+            //connect
+            urlConnection.connect();
+
+            //set the path where we want to save the file
+            File SDCardRoot = Environment.getExternalStorageDirectory();
+            //create a new file, to save the downloaded file
+            File file = new File(SDCardRoot,"downloaded_file1.c");
+
+            FileOutputStream fileOutput = new FileOutputStream(file);
+            TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+                public X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                @Override
+                public void checkClientTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                    // Not implemented
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
+                    // Not implemented
+                }
+            } };
+
+            try {
+                SSLContext sc = SSLContext.getInstance("TLS");
+
+                sc.init(null, trustAllCerts, new java.security.SecureRandom());
+
+                urlConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+            } catch (KeyManagementException ex) {
+                ex.printStackTrace();
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
+            //Stream used for reading the data from the internet
+            InputStream inputStream = urlConnection.getInputStream();
+
+            //this is the total size of the file which we are downloading
+            totalSize = urlConnection.getContentLength();
+
+            //create a buffer...
+            byte[] buffer = new byte[1024];
+            int bufferLength = 0;
+
+            while ( (bufferLength = inputStream.read(buffer)) > 0 ) {
+                fileOutput.write(buffer, 0, bufferLength);
+                downloadedSize += bufferLength;
+
+            }
+            //close the output stream when complete //
+            fileOutput.close();
+
+        } catch (final MalformedURLException e) {
+            showError("Error : MalformedURLException " + e);
+            e.printStackTrace();
+        } catch (final IOException e) {
+            showError("Error : IOException " + e);
+            e.printStackTrace();
+        }
+        catch (final Exception e) {
+            showError("Error : Please check your internet connection " + e);
+        }
+    }
+
+    void showError(final String err){
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Toast.makeText(MainActivity.this, err, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -87,6 +368,41 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //mSensorManager.registerListener();
+
+        final Button uploadbutton = (Button)findViewById(R.id.uploadButton);
+
+        uploadbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d("Demo", "onClick: starting srvice");
+                new Thread(new Runnable() {
+                    public void run() {
+
+                        uploadFile(DATABASE_LOCATION);
+
+                    }
+                }).start();
+            }
+        });
+
+        final Button downloadbutton = (Button)findViewById(R.id.downloadButton);
+
+        downloadbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d("Demo", "onClick: starting srvice");
+
+                new Thread(new Runnable() {
+                    public void run() {
+                        downloadFile();
+                    }
+                }).start();
+            }
+        });
+
+
 
         final Button runButton = (Button)findViewById(R.id.runbutton);
         runButton.setOnClickListener(new View.OnClickListener()
