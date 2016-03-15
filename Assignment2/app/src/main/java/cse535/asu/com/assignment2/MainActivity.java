@@ -26,17 +26,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateFactory;
 
-
-import android.app.Dialog;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import android.view.Window;
 
 
 import java.security.KeyManagementException;
@@ -46,20 +38,16 @@ import java.security.cert.X509Certificate;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 import android.Manifest;
 import android.app.Activity;
 import android.support.v4.app.ActivityCompat;
 import android.content.pm.PackageManager;
-import java.io.BufferedWriter;
+
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URLConnection;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import android.view.View;
@@ -89,13 +77,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Integer id;
     private String tableName;
     private boolean tableCreated;
+    double graph2LastXValue = 0d;
 
+    //private int uploadDoubleChecker = 0;
+
+    LineGraphSeries<DataPoint> mSeriesX = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> mSeriesY = new LineGraphSeries<DataPoint>();
+    LineGraphSeries<DataPoint> mSeriesZ = new LineGraphSeries<DataPoint>();
+    private static int ACCE_FILTER_DATA_MIN_TIME = 1000; // 1000ms
+    private long lastSaved = System.currentTimeMillis();
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
+    private Handler mHandler;
+    private Runnable mTimer1;
+    private Boolean stopGraphClicked = false;
 
     /**
      * Checks if the app has permission to write to device storage
@@ -233,15 +232,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 dos.flush();
                 dos.close();
 
+
             } catch (MalformedURLException ex) {
-                ex.printStackTrace();
-                Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
+                //ex.printStackTrace();
+                //Log.e("Upload file to server", "error: " + ex.getMessage(), ex);
             } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("Upload file Exception", "Exception : " + e.getMessage(), e);
+                //e.printStackTrace();
+                //Log.e("Upload file Exception", "Exception : " + e.getMessage(), e);
+                uploadFile(sourceFileUri);
+
             }
 
             System.out.println("SERVER RESPONSE CODE : " + serverResponseCode);
+
             return serverResponseCode;
         } // End else block
 
@@ -251,13 +254,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     void downloadFile(String destFileUri){
         int downloadedSize = 0;
         int totalSize = 0;
-        String dwnload_file_path = "https://impact.asu.edu/Appenstance/Group1DB";
+        String dwnload_file_path = "https://impact.asu.edu/Appenstance/Group1DB_2";
 
         try {
             URL url = new URL(dwnload_file_path);
-            System.out.println("11111");
             HttpsURLConnection urlConnection = (HttpsURLConnection) url.openConnection();
-            System.out.println("22222");
+
+
+            urlConnection.setRequestMethod("GET");
+            urlConnection.setDoOutput(true);
+
             TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
                 public X509Certificate[] getAcceptedIssuers() {
                     return null;
@@ -273,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     // Not implemented
                 }
             } };
-            System.out.println("33333");
             try {
                 SSLContext sc = SSLContext.getInstance("TLS");
 
@@ -285,13 +290,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
-            System.out.println("44444");
-            urlConnection.setRequestMethod("GET");
-            urlConnection.setDoOutput(true);
-            System.out.println("55555");
+
             //connect
             urlConnection.connect();
-            System.out.println("66666");
+
             File destFile = new File(destFileUri);
 
             verifyStoragePermissions(MainActivity.this);
@@ -317,14 +319,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             System.out.println("File Downloaded");
 
         } catch (final MalformedURLException e) {
-            showError("Error : MalformedURLException " + e);
-            e.printStackTrace();
+            //showError("Error : MalformedURLException " + e);
+           // e.printStackTrace();
+            //downloadFile(destFileUri);
         } catch (final IOException e) {
-            showError("Error : IOException " + e);
-            e.printStackTrace();
+            //showError("Error : IOException " + e);
+           // e.printStackTrace();
+            downloadFile(destFileUri);
         }
         catch (final Exception e) {
-            showError("Error : Please check your internet connection " + e);
+            //showError("Error : Please check your internet connection " + e);
+           // downloadFile(destFileUri);
         }
     }
 
@@ -340,6 +345,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
+        mHandler = new Handler();
+
         System.out.println("Hi, Launching App");
 
         super.onCreate(savedInstanceState);
@@ -365,7 +373,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 }
             }
         }
-        DATABASE_LOCATION = SDCARD_LOCATION + "/Group1DB";
+
+        DATABASE_LOCATION = SDCARD_LOCATION + "/Group1DB_2";
         System.out.println(DATABASE_LOCATION);
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
@@ -393,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                     }
                 }).start();
+                Toast.makeText(MainActivity.this, "DB uploaded", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -409,6 +419,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         downloadFile(DATABASE_LOCATION);
                     }
                 }).start();
+                Toast.makeText(MainActivity.this, "DB downloaded", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -421,15 +432,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v)
             {
 
+
                 InputMethodManager inputManager = (InputMethodManager)
                         getSystemService(MainActivity.INPUT_METHOD_SERVICE);
 
                 inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
-
-                AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create(); // http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
-                alertDialog.setTitle("ERROR!!!");
-                alertDialog.setMessage("Please Enter Valid Data");
 
                 EditText patientName = (EditText) findViewById(R.id.editText);
                 name = patientName.getText().toString();
@@ -438,15 +446,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 EditText patientAge = (EditText) findViewById(R.id.EditText02);
                 age = patientAge.getText().toString();
 
-                if (id <= 0 || id > 10 || name == "" || age == "")
-                {
-                    alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            });
-                }
+
                 RadioButton male = (RadioButton) findViewById(R.id.male);
                 RadioButton female = (RadioButton) findViewById(R.id.female);
                 RadioButton other = (RadioButton) findViewById(R.id.other);
@@ -473,91 +473,116 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         + "_" + age
                         + "_" + gender_string;
 
-                final SQLiteDatabase db1 = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.OPEN_READWRITE);
+                final SQLiteDatabase db1 = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.OPEN_READONLY);
                 //final SQLiteDatabase db1 = this.openOrCreateDatabase(DATABASE_LOCATION,MODE_ENABLE_WRITE_AHEAD_LOGGING,null);
                 final String readQuery = "SELECT xValues, yValues, zValues FROM " + tableName +
                         " LIMIT 10 OFFSET (SELECT COUNT(*) FROM " + tableName + " )-10";
 
 
 
-                Runnable runnable1 = new Runnable()
+                //plot the first 10 data points
+                Cursor c1 = db1.rawQuery(readQuery, null);
+
+
+
+                if (c1 !=null)
+                {
+                    if (c1.moveToFirst())
+                    {
+                        do
+                        {
+                            Double x = c1.getDouble(c1.getColumnIndex("xValues"));
+                            mSeriesX.appendData(new DataPoint(graph2LastXValue, x), true, 101);
+                            Double y = c1.getDouble(c1.getColumnIndex("yValues"));
+                            mSeriesY.appendData(new DataPoint(graph2LastXValue, y), true, 101);
+                            Double z = c1.getDouble(c1.getColumnIndex("zValues"));
+                            mSeriesZ.appendData(new DataPoint(graph2LastXValue, z), true, 101);
+                            graph2LastXValue += 1d;
+                        }
+                        while (c1.moveToNext());
+
+                    }
+
+
+                    GraphView graph = (GraphView) findViewById(R.id.graph);
+                    graph.removeAllSeries();
+                    graph.setTitle("Accelerometer data  for " + name);
+                    graph.setBackgroundColor(Color.argb(60, 255, 0, 255));
+                    graph.setTitleColor(Color.MAGENTA);
+                    graph.getViewport().setScalable(true);
+                    graph.getViewport().setScrollable(true);
+                    graph.getViewport().setXAxisBoundsManual(true);
+                    graph.getViewport().setMinX(0);
+                    graph.getViewport().setMaxX(10);
+
+                    graph.addSeries(mSeriesX);
+                    graph.addSeries(mSeriesY);
+                    graph.addSeries(mSeriesZ);
+                    mSeriesX.setColor(Color.MAGENTA);
+                    mSeriesY.setColor(Color.GREEN);
+                    mSeriesZ.setColor(Color.BLUE);
+                    mSeriesX.setThickness(4);
+                    mSeriesY.setThickness(4);
+                    mSeriesZ.setThickness(4);
+                    mSeriesX.setDataPointsRadius(10);
+                    mSeriesX.setTitle("X");
+                    mSeriesY.setTitle("Y");
+                    mSeriesZ.setTitle("Z");
+                    graph.getLegendRenderer().setVisible(true);
+                    graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+
+                    c1.close();
+                }
+
+                mTimer1 = new Runnable()
                 {
                     @Override
                     public void run()
                     {
-                        Cursor c1 = db1.rawQuery(readQuery, null);
-                        LineGraphSeries<DataPoint> mSeriesX = new LineGraphSeries<DataPoint>();
-                        LineGraphSeries<DataPoint> mSeriesY = new LineGraphSeries<DataPoint>();
-                        LineGraphSeries<DataPoint> mSeriesZ = new LineGraphSeries<DataPoint>();
-                        double graph2LastXValue = 0d;
 
-                        if (c1 !=null)
-                        {
-                            if (c1.moveToFirst())
-                            {
-                                do
-                                {
-                                    Double x = c1.getDouble(c1.getColumnIndex("xValues"));
-                                    mSeriesX.appendData(new DataPoint(graph2LastXValue, x), true, 101);
-                                    Double y = c1.getDouble(c1.getColumnIndex("yValues"));
-                                    mSeriesY.appendData(new DataPoint(graph2LastXValue, y), true, 101);
-                                    Double z = c1.getDouble(c1.getColumnIndex("zValues"));
-                                    mSeriesZ.appendData(new DataPoint(graph2LastXValue, z), true, 101);
-                                    graph2LastXValue += 1d;
-                                }
-                                while (c1.moveToNext());
+                       try {
+                           final SQLiteDatabase db1 = SQLiteDatabase.openDatabase(DATABASE_LOCATION, null, SQLiteDatabase.OPEN_READONLY);
 
-                            }
+                           //final SQLiteDatabase db1 = this.openOrCreateDatabase(DATABASE_LOCATION,MODE_ENABLE_WRITE_AHEAD_LOGGING,null);
+                           final String readQuery = "SELECT xValues, yValues, zValues FROM " + tableName +
+                                   " ORDER BY timeStamp DESC LIMIT 1";
+                           Cursor c1 = db1.rawQuery(readQuery, null);
 
-                            GraphView graph = (GraphView) findViewById(R.id.graph);
-                            graph.removeAllSeries();
-                            graph.setTitle("Accelerometer data  for " + name);
-                            graph.setBackgroundColor(Color.argb(60, 255, 0, 255));
-                            graph.setTitleColor(Color.MAGENTA);
-                            graph.getViewport().setScalable(true);
-                            graph.getViewport().setScrollable(true);
-                            graph.getViewport().setXAxisBoundsManual(true);
-                            graph.getViewport().setMinX(0);
-                            graph.getViewport().setMaxX(10);
 
-                            graph.addSeries(mSeriesX);
-                            graph.addSeries(mSeriesY);
-                            graph.addSeries(mSeriesZ);
-                            mSeriesX.setColor(Color.MAGENTA);
-                            mSeriesY.setColor(Color.GREEN);
-                            mSeriesZ.setColor(Color.BLUE);
-                            mSeriesX.setThickness(4);
-                            mSeriesY.setThickness(4);
-                            mSeriesZ.setThickness(4);
-                            mSeriesX.setDataPointsRadius(10);
-                            mSeriesX.setTitle("X");
-                            mSeriesY.setTitle("Y");
-                            mSeriesZ.setTitle("Z");
-                            graph.getLegendRenderer().setVisible(true);
-                            graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+                           if (c1 != null) {
+                               c1.moveToFirst();
 
-                            c1.close();
-                        }
 
+                               Double x = c1.getDouble(c1.getColumnIndex("xValues"));
+                               mSeriesX.appendData(new DataPoint(graph2LastXValue, x), true, 101);
+                               Double y = c1.getDouble(c1.getColumnIndex("yValues"));
+                               mSeriesY.appendData(new DataPoint(graph2LastXValue, y), true, 101);
+                               Double z = c1.getDouble(c1.getColumnIndex("zValues"));
+                               mSeriesZ.appendData(new DataPoint(graph2LastXValue, z), true, 101);
+                               graph2LastXValue += 1d;
+
+
+                               c1.close();
+
+                           }
+
+                       }
+                       finally {
+                           if (!stopGraphClicked) mHandler.postDelayed(mTimer1, 1000);
+                       }
                     }
+
                 };
 
-                Handler handlerGraph = new Handler();
-                handlerGraph.post(runnable1);
+
+                mTimer1.run();
+
+
             }
 
         });
 
-        final Button clearButton = (Button) findViewById(R.id.clearbutton);
-        clearButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                GraphView graph = (GraphView) findViewById(R.id.graph);
-                graph.removeAllSeries();
-            }
-        });
+
 
         final Button stopButton = (Button) findViewById(R.id.stopbutton);
         stopButton.setOnClickListener(new View.OnClickListener()
@@ -566,7 +591,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             public void onClick(View v)
             {
                 stopAcclService();
-                //Put code to stop reading accelerometer values and end write db connection
+                Toast.makeText(MainActivity.this, "DB updated", Toast.LENGTH_SHORT).show();
+                stopGraphClicked = true;
+                //set the graph update boolean to false.
+                GraphView graph = (GraphView) findViewById(R.id.graph);
+                graph.removeAllSeries();
             }
         });
 
@@ -580,7 +609,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
                 //Toast.makeText(MainActivity.this, "Waiting for db update", Toast.LENGTH_LONG).show();
 
-
+                stopGraphClicked = false;
                 AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create(); // http://stackoverflow.com/questions/26097513/android-simple-alert-dialog
                 alertDialog.setTitle("ERROR!!!");
                 alertDialog.setMessage("Please Enter Valid Data");
@@ -632,7 +661,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 startAcclService();
                 startButton.setEnabled(false);
                 runButton.setEnabled(false);
-                clearButton.setEnabled(false);
+                //clearButton.setEnabled(false);
                 stopButton.setEnabled(false);
 
                 //Toast.makeText(MainActivity.this, "database creation is done", Toast.LENGTH_LONG).show();
@@ -645,7 +674,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     {
                         startButton.setEnabled(true);
                         runButton.setEnabled(true);
-                        clearButton.setEnabled(true);
+                        // clearButton.setEnabled(true);
                         stopButton.setEnabled(true);
                         //Toast.makeText(MainActivity.this, "Good morning, where is my bacon", Toast.LENGTH_LONG).show();
                         System.out.println("Good Morning");
@@ -654,7 +683,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 };
 
                 Handler handler = new Handler();
-                handler.postDelayed(runnable, 100);
+                handler.postDelayed(runnable, 10000);
 
             }
         });
@@ -675,7 +704,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     {
 
         //put all this in a method in a thread
-        mSensorManager.registerListener(MainActivity.this, mAccelerometer, 1000000);
+        mSensorManager.registerListener(MainActivity.this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         //This get the accls values and puts in in the database
         double[] x = new double[100];
         double[] y = new double[100];
@@ -693,8 +722,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     @Override
     public void onSensorChanged(SensorEvent event)
     {
-        Toast.makeText(this, event.values.toString(), Toast.LENGTH_SHORT  );
-        writeToTable(event.values[0], event.values[1], event.values[2]);
+        if ((System.currentTimeMillis() - lastSaved) > ACCE_FILTER_DATA_MIN_TIME) {
+            lastSaved = System.currentTimeMillis();
+            writeToTable(event.values[0], event.values[1], event.values[2]);
+        }
+
+
+
     }
 
     @Override
