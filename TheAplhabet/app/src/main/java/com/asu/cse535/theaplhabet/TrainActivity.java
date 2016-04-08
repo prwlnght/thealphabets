@@ -167,6 +167,46 @@ public class TrainActivity extends AppCompatActivity implements NavigationView.O
         {
             image.setImageResource(R.drawable.ic_alphabetz);
         }
+        else if (parent.getItemAtPosition(pos).toString() == "0")
+        {
+            image.setImageResource(R.drawable.ic_number0);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "1")
+        {
+            image.setImageResource(R.drawable.ic_number1);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "2")
+        {
+            image.setImageResource(R.drawable.ic_number2);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "3")
+        {
+            image.setImageResource(R.drawable.ic_number3);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "4")
+        {
+            image.setImageResource(R.drawable.ic_number4);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "5")
+        {
+            image.setImageResource(R.drawable.ic_number5);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "6")
+        {
+            image.setImageResource(R.drawable.ic_number6);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "7")
+        {
+            image.setImageResource(R.drawable.ic_number7);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "8")
+        {
+            image.setImageResource(R.drawable.ic_number8);
+        }
+        else if (parent.getItemAtPosition(pos).toString() == "9")
+        {
+            image.setImageResource(R.drawable.ic_number9);
+        }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
