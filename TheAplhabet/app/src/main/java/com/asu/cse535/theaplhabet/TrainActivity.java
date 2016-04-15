@@ -245,6 +245,9 @@ public class TrainActivity extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_test) {
             Intent intent = new Intent(TrainActivity.this, TestActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_home) {
+            Intent intent = new Intent(TrainActivity.this, MainActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

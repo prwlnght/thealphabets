@@ -79,6 +79,9 @@ public class TestActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_test) {
             Intent intent = new Intent(TestActivity.this, TestActivity.class);
             startActivity(intent);
+        } else if (id == R.id.nav_home) {
+            Intent intent = new Intent(TestActivity.this, MainActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
