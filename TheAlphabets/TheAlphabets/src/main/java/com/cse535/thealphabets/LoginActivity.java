@@ -115,9 +115,7 @@ public class LoginActivity extends Activity {
             mAuthTask = new UserLoginTask(email, password);
             Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
             //mAuthTask.execute((Void) null);
-            boolean check = exists("http://10.143.7.90/"+email);
-            if(check == true){System.out.println("Login successful");}
-            else System.out.println("Login failed");
+
         }
     }
 
@@ -158,6 +156,14 @@ public class LoginActivity extends Activity {
         UserLoginTask(String email, String password) {
             mEmail = email;
             mPassword = password;
+
+            boolean check = exists("http://10.143.7.90/"+mEmail);
+            if(check == true){
+                System.out.println("Login successful");
+
+            }
+            else
+                System.out.println("Login failed");
         }
 
         @Override
