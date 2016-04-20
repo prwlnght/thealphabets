@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,20 +74,38 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
                 myoReader.reset();
                 myoReader.start();
 
-                Runnable runnable = new Runnable() {
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         myoReader.stop();
                         trainButton.setEnabled(true);
-                        System.out.println(accelerometerData);
-                    }
-                };
-                Handler handler = new Handler();
-                handler.postDelayed(runnable, 5000);
+                        accelerometerData = myoReader.getAccelerometerData();
 
-                accelerometerData = myoReader.getAccelerometerData();
-                gyroscopeData = myoReader.getGyroscopeData();
-                orienationData = myoReader.getOrienationData();
+                        /*System.out.println("Accelerometer Data");
+
+                        for (int i=0; i <accelerometerData.size(); i++){
+                            System.out.println(accelerometerData.get(i));
+                        }
+
+                        System.out.println("Gyroscope Data");
+
+                        gyroscopeData = myoReader.getGyroscopeData();
+                        for (int i=0; i <gyroscopeData.size(); i++){
+                            System.out.println(gyroscopeData.get(i));
+                        }
+                        */
+                        System.out.println("Orientation Data");
+                        orienationData = myoReader.getOrienationData();
+                        for (int i=0; i <orienationData.size(); i++){
+                            System.out.println(orienationData.get(i));
+                        }
+                    }
+                }, 5000);
+
+
+
+
             }
         });
 

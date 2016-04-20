@@ -20,6 +20,7 @@ public class ReadMyo extends AbstractDeviceListener {
     private List<Vector3> gyroscopeData = new ArrayList<Vector3>();
 
 
+
     public ReadMyo(Hub hub) {
         this.hub = hub;
     }
@@ -58,6 +59,11 @@ public class ReadMyo extends AbstractDeviceListener {
     public void onGyroscopeData(Myo myo, long timestamp, Vector3 gyro) {
         gyroscopeData.add(gyro);
     }
+
+   /* @Override
+    public void onEmgData(Myo myo, long timestamp, Vector3 gyro) {
+        gyroscopeData.add(gyro);
+    }*/
 
     public List<Vector3> getAccelerometerData() {
         return accelerometerData;
