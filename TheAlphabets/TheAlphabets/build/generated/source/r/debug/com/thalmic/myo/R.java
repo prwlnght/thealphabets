@@ -20,8 +20,8 @@ public final class R {
 		public static final int myosdk__fragment_scan_window_width = 0x7f070009;
 	}
 	public static final class drawable {
-		public static final int myosdk__connected_dot = 0x7f020080;
-		public static final int myosdk__firmware_incompatible_dot = 0x7f020081;
+		public static final int myosdk__connected_dot = 0x7f020086;
+		public static final int myosdk__firmware_incompatible_dot = 0x7f020087;
 	}
 	public static final class id {
 		public static final int myosdk__action_scan = 0x7f0b0058;

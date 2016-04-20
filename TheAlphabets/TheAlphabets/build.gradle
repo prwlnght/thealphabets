@@ -22,4 +22,5 @@ dependencies {
 
     compile 'com.thalmic:myosdk:0.10.0@aar'
     compile 'com.android.support:appcompat-v7:18.0.0'
+
 }
