@@ -28,10 +28,10 @@ public class TestActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
 
-        Spinner dropdown = (Spinner) findViewById(R.id.alphabets);
+        /*Spinner dropdown = (Spinner) findViewById(R.id.alphabets);
         String[] items = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "9"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        dropdown.setAdapter(adapter);
+        dropdown.setAdapter(adapter);*/
 
         testButton = (Button) findViewById(R.id.button);
         testButton.setOnClickListener(new View.OnClickListener() {
@@ -63,7 +63,7 @@ public class TestActivity extends Activity {
         inflater.inflate(R.menu.main, menu);
         return true;
     }
-
+    
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -72,6 +72,8 @@ public class TestActivity extends Activity {
             return true;
         }
         else if (R.id.action_login == id) {
+            LoginActivity.mAuthTask = false;
+            LoginActivity.user = null;
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return true;

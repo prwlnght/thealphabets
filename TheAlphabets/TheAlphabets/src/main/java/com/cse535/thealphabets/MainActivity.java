@@ -88,6 +88,8 @@ public class MainActivity extends Activity {
             return true;
         }
         else if (R.id.action_login == id) {
+            LoginActivity.mAuthTask = false;
+            LoginActivity.user = null;
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return true;

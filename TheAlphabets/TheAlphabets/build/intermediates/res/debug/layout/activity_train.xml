@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cse535.asu.com.theaplhabet.TrainActivity">
+    tools:context="com.cse535.thealphabets.TrainActivity">
 
     <Spinner
         android:id="@+id/alphabets"

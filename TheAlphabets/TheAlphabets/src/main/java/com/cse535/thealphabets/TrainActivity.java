@@ -68,6 +68,7 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
             @Override
             public void onClick(View view) {
 
+                trainButton.setEnabled(false);
                 myoReader = new ReadMyo(hub);
                 myoReader.reset();
                 myoReader.start();
@@ -76,6 +77,8 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
                     @Override
                     public void run() {
                         myoReader.stop();
+                        trainButton.setEnabled(true);
+                        System.out.println(accelerometerData);
                     }
                 };
                 Handler handler = new Handler();
@@ -227,6 +230,8 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
             return true;
         }
         else if (R.id.action_login == id) {
+            LoginActivity.mAuthTask = false;
+            LoginActivity.user = null;
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             return true;

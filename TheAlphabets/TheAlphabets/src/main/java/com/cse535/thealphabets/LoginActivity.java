@@ -26,15 +26,16 @@ import com.thalmic.myo.scanner.ScanActivity;
 import java.net.*;
 
 
-
 /**
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends Activity {
 
-    private DeviceListener mListener = new AbstractDeviceListener(){};
-    private UserLoginTask mAuthTask = null;
 
+    public static Boolean mAuthTask = false;
+    public static String user;
+
+    private DeviceListener mListener = new AbstractDeviceListener(){};
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
@@ -44,7 +45,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Hub hub = Hub.getInstance();
+        /*Hub hub = Hub.getInstance();
         if (!hub.init(this, getPackageName())) {
             // We can't do anything with the Myo device if the Hub can't be initialized, so exit.
             Toast.makeText(this, "Couldn't initialize Hub", Toast.LENGTH_SHORT).show();
@@ -52,7 +53,8 @@ public class LoginActivity extends Activity {
             return;
         }
         // Next, register for DeviceListener callbacks.
-        hub.addListener(mListener);
+        hub.addListener(mListener);*/
+
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -74,7 +76,7 @@ public class LoginActivity extends Activity {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        if (mAuthTask != null) {
+        if (mAuthTask != false) {
             return;
         }
 
@@ -112,9 +114,19 @@ public class LoginActivity extends Activity {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            mAuthTask = new UserLoginTask(email, password);
+
             Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
-            //mAuthTask.execute((Void) null);
+            boolean check = exists("http://10.143.7.90/"+email);
+            if(check == true){
+                System.out.println("Login successful");
+                mAuthTask = true;
+                user = email;
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+
+            }
+            else
+                System.out.println("Login failed");
 
         }
     }
@@ -148,7 +160,7 @@ public class LoginActivity extends Activity {
      * Represents an asynchronous login task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    /*public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
@@ -189,7 +201,7 @@ public class LoginActivity extends Activity {
             mAuthTask = null;
 
         }
-    }
+    }*/
 
 
     @Override

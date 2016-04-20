@@ -842,10 +842,10 @@ containing a value of this type.
         public static final int action_test=0x7f0b0057;
         public static final int action_train=0x7f0b0056;
         public static final int activity_chooser_view_content=0x7f0b0023;
-        public static final int alphabets=0x7f0b0049;
+        public static final int alphabets=0x7f0b004c;
         public static final int always=0x7f0b000f;
         public static final int beginning=0x7f0b000a;
-        public static final int button=0x7f0b004b;
+        public static final int button=0x7f0b0049;
         public static final int checkbox=0x7f0b002b;
         public static final int collapseActionView=0x7f0b0011;
         public static final int container=0x7f0b0047;
@@ -866,7 +866,7 @@ containing a value of this type.
         public static final int ifRoom=0x7f0b000e;
         public static final int image=0x7f0b0025;
         public static final int imageView=0x7f0b004d;
-        public static final int imageViewTest=0x7f0b004c;
+        public static final int imageViewTest=0x7f0b004b;
         public static final int left_icon=0x7f0b0031;
         public static final int listMode=0x7f0b0001;
         public static final int list_item=0x7f0b0027;

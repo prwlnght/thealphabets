@@ -309,10 +309,10 @@ int id action_scan 0x7f0b0053
 int id action_test 0x7f0b0057
 int id action_train 0x7f0b0056
 int id activity_chooser_view_content 0x7f0b0023
-int id alphabets 0x7f0b0049
+int id alphabets 0x7f0b004c
 int id always 0x7f0b000f
 int id beginning 0x7f0b000a
-int id button 0x7f0b004b
+int id button 0x7f0b0049
 int id checkbox 0x7f0b002b
 int id collapseActionView 0x7f0b0011
 int id container 0x7f0b0047
@@ -333,7 +333,7 @@ int id icon 0x7f0b0028
 int id ifRoom 0x7f0b000e
 int id image 0x7f0b0025
 int id imageView 0x7f0b004d
-int id imageViewTest 0x7f0b004c
+int id imageViewTest 0x7f0b004b
 int id left_icon 0x7f0b0031
 int id listMode 0x7f0b0001
 int id list_item 0x7f0b0027
