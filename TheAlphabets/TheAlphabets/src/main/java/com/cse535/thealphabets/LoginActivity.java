@@ -1,10 +1,13 @@
 package com.cse535.thealphabets;
 
+
 import android.app.Activity;
 import android.content.Intent;
+
 import android.os.AsyncTask;
+
 import android.os.Bundle;
-import android.text.TextUtils;
+
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -19,6 +22,8 @@ import com.thalmic.myo.AbstractDeviceListener;
 import com.thalmic.myo.DeviceListener;
 import com.thalmic.myo.Hub;
 import com.thalmic.myo.scanner.ScanActivity;
+
+import java.net.*;
 
 
 
@@ -84,13 +89,13 @@ public class LoginActivity extends Activity {
         boolean cancel = false;
         View focusView = null;
 
-        // Check for a valid password, if the user entered one.
+       /* // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordView;
             cancel = true;
         }
-
+        */
        /* // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
             mEmailView.setError(getString(R.string.error_field_required));
@@ -110,19 +115,36 @@ public class LoginActivity extends Activity {
             mAuthTask = new UserLoginTask(email, password);
             Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
             //mAuthTask.execute((Void) null);
+            boolean check = exists("http://10.143.7.90/"+email);
+            if(check == true){System.out.println("Login successful");}
+            else System.out.println("Login failed");
         }
     }
 
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
+    public static boolean exists(String URLName){
+        try {
+            HttpURLConnection.setFollowRedirects(false);
+            // note : you may also need
+            //        HttpURLConnection.setInstanceFollowRedirects(false)
+            HttpURLConnection con =
+                    (HttpURLConnection) new URL(URLName).openConnection();
+            con.setRequestMethod("HEAD");
+            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+ /*   private boolean isEmailValid(String email) {
         return email.contains("@");
     }
 
     private boolean isPasswordValid(String password) {
-        //TODO: Replace this with your own logic
         return password.length() > 4;
     }
-
+*/
 
     /**
      * Represents an asynchronous login task used to authenticate
