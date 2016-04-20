@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -23,6 +26,7 @@ import com.thalmic.myo.scanner.ScanActivity;
 public class TestActivity extends Activity {
 
     private DeviceListener mListener = new AbstractDeviceListener(){};
+    private Button testButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +37,17 @@ public class TestActivity extends Activity {
         String[] items = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "9"};
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, items);
         dropdown.setAdapter(adapter);
+
+        testButton = (Button) findViewById(R.id.button);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ImageView image;
+                image = (ImageView) findViewById(R.id.imageViewTest);
+                image.setScaleType(ImageView.ScaleType.FIT_CENTER);
+
+            }
+        });
 
         Hub hub = Hub.getInstance();
         if (!hub.init(this, getPackageName())) {
@@ -59,6 +74,11 @@ public class TestActivity extends Activity {
         int id = item.getItemId();
         if (R.id.action_scan == id) {
             onScanActionSelected();
+            return true;
+        }
+        else if (R.id.action_login == id) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             return true;
         }
         else if (R.id.action_home == id) {

@@ -154,6 +154,11 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
             onScanActionSelected();
             return true;
         }
+        else if (R.id.action_login == id) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            return true;
+        }
         else if (R.id.action_home == id) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);

@@ -23,7 +23,6 @@ import com.thalmic.myo.scanner.ScanActivity;
 
 public class MainActivity extends Activity {
 
-    private TextView mLockStateView;
     private TextView mTextView;
 
     // Classes that inherit from AbstractDeviceListener can be used to receive events from Myo devices.
@@ -43,21 +42,6 @@ public class MainActivity extends Activity {
             // Set the text color of the text view to red when a Myo disconnects.
             mTextView.setTextColor(Color.RED);
         }
-
-        // onUnlock() is called whenever a synced Myo has been unlocked. Under the standard locking
-        // policy, that means poses will now be delivered to the listener.
-        @Override
-        public void onUnlock(Myo myo, long timestamp) {
-            mLockStateView.setText(R.string.unlocked);
-        }
-
-        // onLock() is called whenever a synced Myo has been locked. Under the standard locking
-        // policy, that means poses will no longer be delivered to the listener.
-        @Override
-        public void onLock(Myo myo, long timestamp) {
-            mLockStateView.setText(R.string.locked);
-        }
-
     };
 
     @Override
@@ -65,7 +49,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mLockStateView = (TextView) findViewById(R.id.lock_state);
         mTextView = (TextView) findViewById(R.id.text);
 
         // First, we initialize the Hub singleton with an application identifier.
@@ -106,6 +89,11 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
         if (R.id.action_scan == id) {
             onScanActionSelected();
+            return true;
+        }
+        else if (R.id.action_login == id) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
             return true;
         }
         else if (R.id.action_home == id) {

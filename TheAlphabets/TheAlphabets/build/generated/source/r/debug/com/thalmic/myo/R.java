@@ -8,10 +8,10 @@ package com.thalmic.myo;
 
 public final class R {
 	public static final class color {
-		public static final int myosdk__button_orange = 0x7f0a0008;
-		public static final int myosdk__button_red = 0x7f0a0009;
-		public static final int myosdk__indicator_green = 0x7f0a000a;
-		public static final int myosdk__thalmic_blue = 0x7f0a000b;
+		public static final int myosdk__button_orange = 0x7f0a000a;
+		public static final int myosdk__button_red = 0x7f0a000b;
+		public static final int myosdk__indicator_green = 0x7f0a000c;
+		public static final int myosdk__thalmic_blue = 0x7f0a000d;
 	}
 	public static final class dimen {
 		public static final int myosdk__activity_horizontal_margin = 0x7f070014;
@@ -24,17 +24,17 @@ public final class R {
 		public static final int myosdk__firmware_incompatible_dot = 0x7f020081;
 	}
 	public static final class id {
-		public static final int myosdk__action_scan = 0x7f0b0053;
-		public static final int myosdk__connection_state_dot = 0x7f0b004c;
-		public static final int myosdk__fragment_scan = 0x7f0b0049;
-		public static final int myosdk__progress = 0x7f0b004b;
-		public static final int myosdk__required_firmware_version_text = 0x7f0b004a;
-		public static final int myosdk__scan_result_view = 0x7f0b004d;
+		public static final int myosdk__action_scan = 0x7f0b0058;
+		public static final int myosdk__connection_state_dot = 0x7f0b0051;
+		public static final int myosdk__fragment_scan = 0x7f0b004e;
+		public static final int myosdk__progress = 0x7f0b0050;
+		public static final int myosdk__required_firmware_version_text = 0x7f0b004f;
+		public static final int myosdk__scan_result_view = 0x7f0b0052;
 	}
 	public static final class layout {
-		public static final int myosdk__activity_scan = 0x7f04001b;
-		public static final int myosdk__device_list_item = 0x7f04001c;
-		public static final int myosdk__fragment_scan = 0x7f04001d;
+		public static final int myosdk__activity_scan = 0x7f04001c;
+		public static final int myosdk__device_list_item = 0x7f04001d;
+		public static final int myosdk__fragment_scan = 0x7f04001e;
 	}
 	public static final class menu {
 		public static final int myosdk__fragment_scan = 0x7f0d0001;

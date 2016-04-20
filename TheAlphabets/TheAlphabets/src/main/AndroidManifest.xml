@@ -23,18 +23,21 @@
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".TrainActivity"
+            android:label="Train"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".TestActivity"
+            android:label="Test"
+            android:screenOrientation="portrait" />
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".TrainActivity"
-            android:label="Train"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".TestActivity"
-            android:label="Test"
-            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

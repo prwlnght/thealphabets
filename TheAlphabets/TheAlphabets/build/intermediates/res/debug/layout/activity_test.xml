@@ -43,5 +43,16 @@
         android:textSize="20sp"
         android:textStyle="bold" />
 
+    <ImageView
+        android:id="@+id/imageViewTest"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_below="@+id/alphabets"
+        android:layout_centerHorizontal="true"
+        android:maxHeight="100dp"
+        android:maxWidth="100dp"
+        android:scaleType="fitCenter" />
+
+
 
 </RelativeLayout><!-- From: file:/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/src/main/res/layout/activity_test.xml -->

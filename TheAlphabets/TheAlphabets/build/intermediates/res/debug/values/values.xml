@@ -77,6 +77,8 @@
     <!-- From: file:/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/src/main/res/values/colors.xml -->
     <eat-comment/>
     <color name="background_material_dark">#f9f8f8</color>
+    <color name="black">#000000</color>
+    <color name="blue1">#0f60fe</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorPrimary">#0dadfd</color>
     <color name="colorPrimaryDark">#303F9F</color>
@@ -87,6 +89,9 @@
     <color name="myosdk__button_red">#AE0922</color>
     <color name="myosdk__indicator_green">#24C75A</color>
     <color name="myosdk__thalmic_blue">#00BCDD</color>
+    <!-- From: file:/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/src/main/res/values/colors.xml -->
+    <eat-comment/>
+    <color name="primary_dark_material_light">#f6f4f4</color>
     <declare-styleable name="ActionBar"><attr name="navigationMode"><enum name="normal" value="0"/><enum name="listMode" value="1"/><enum name="tabMode" value="2"/></attr><attr name="displayOptions"><flag name="useLogo" value="0x1"/><flag name="showHome" value="0x2"/><flag name="homeAsUp" value="0x4"/><flag name="showTitle" value="0x8"/><flag name="showCustom" value="0x10"/><flag name="disableHome" value="0x20"/></attr><attr name="title"/><attr format="string" name="subtitle"/><attr format="reference" name="titleTextStyle"/><attr format="reference" name="subtitleTextStyle"/><attr format="reference" name="icon"/><attr format="reference" name="logo"/><attr format="reference" name="divider"/><attr format="reference" name="background"/><attr format="reference|color" name="backgroundStacked"/><attr format="reference|color" name="backgroundSplit"/><attr format="reference" name="customNavigationLayout"/><attr name="height"/><attr format="reference" name="homeLayout"/><attr format="reference" name="progressBarStyle"/><attr format="reference" name="indeterminateProgressStyle"/><attr format="dimension" name="progressBarPadding"/><attr format="dimension" name="itemPadding"/></declare-styleable>
     <declare-styleable name="ActionBarLayout"><attr name="android:layout_gravity"/></declare-styleable>
     <declare-styleable name="ActionBarWindow"><attr format="boolean" name="windowActionBar"/><attr format="boolean" name="windowActionBarOverlay"/><attr format="boolean" name="windowSplitActionBar"/></declare-styleable>
@@ -193,7 +198,7 @@
     <string name="pose_wavein">Wave In</string>
     <string name="pose_waveout">Wave Out</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
+    <string name="prompt_password">Password</string>
     <string name="scan">Scan</string>
     <string name="thealphabets">Hello Alphabets!</string>
     <string name="title_activity_connect">ConnectActivity</string>

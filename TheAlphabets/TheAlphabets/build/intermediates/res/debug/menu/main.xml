@@ -11,7 +11,7 @@
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_login"
-        android:title="LOGIN"
+        android:title="LOGOUT"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_train"

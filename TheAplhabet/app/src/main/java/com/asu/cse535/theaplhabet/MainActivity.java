@@ -10,9 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.thalmic.myo.Hub;
+import android.util.Log;
 import com.thalmic.myo.AbstractDeviceListener;
 import com.thalmic.myo.Arm;
 import com.thalmic.myo.DeviceListener;
@@ -53,6 +55,13 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+       /* Hub hub = Hub.getInstance();
+        if (!hub.init(this)) {
+            Toast.makeText(MainActivity.this,"Couldn't initialize the hub", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }*/
+
     }
 
     @Override
@@ -74,13 +83,12 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
+        if (id == R.id.action_connect) {
 
-        //noinspection SimplifiableIfStatement
-
+            //noinspection SimplifiableIfStatement
+        }
         return super.onOptionsItemSelected(item);
     }
 
