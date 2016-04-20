@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 
 import android.os.Bundle;
 
+import android.os.StrictMode.*;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -34,6 +35,7 @@ public class LoginActivity extends Activity {
 
     public static Boolean mAuthTask = false;
     public static String user;
+    public String email;
 
     private DeviceListener mListener = new AbstractDeviceListener(){};
     // UI references.
@@ -84,9 +86,8 @@ public class LoginActivity extends Activity {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
+        email = mEmailView.getText().toString();
         String password = mPasswordView.getText().toString();
-
         boolean cancel = false;
         View focusView = null;
 
@@ -115,36 +116,28 @@ public class LoginActivity extends Activity {
         } else {
 
             Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
-            boolean check = exists("http://10.143.7.90/"+email);
-            if(check == true){
-                System.out.println("Login successful");
-                mAuthTask = true;
-                user = email;
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
+            new RetrieveFeedTaskImpl().execute("http://10.143.7.90/" + email);
 
-            }
-            else
-                System.out.println("Login failed");
-
+//            boolean check = exists("http://10.143.7.90/"+email);
         }
     }
 
-    public static boolean exists(String URLName){
-        try {
-            HttpURLConnection.setFollowRedirects(false);
-            // note : you may also need
-            //        HttpURLConnection.setInstanceFollowRedirects(false)
-            HttpURLConnection con =
-                    (HttpURLConnection) new URL(URLName).openConnection();
-            con.setRequestMethod("HEAD");
-            return (con.getResponseCode() == HttpURLConnection.HTTP_OK);
+    public void returnValue(Boolean result) {
+
+        if(result){
+
+            System.out.println("Login successful");
+            mAuthTask = true;
+            user = email;
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+
         }
-        catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
+        else
+            System.out.println("Login failed");
+
     }
+
 
  /*   private boolean isEmailValid(String email) {
         return email.contains("@");
@@ -246,5 +239,40 @@ public class LoginActivity extends Activity {
         Intent intent = new Intent(this, ScanActivity.class);
         startActivity(intent);
     }
+
+
+    class RetrieveFeedTaskImpl extends AsyncTask<String, Void, Boolean> {
+
+        Boolean x;
+        private Exception exception;
+        @Override
+        protected Boolean doInBackground(String... urls) {
+            try {
+                URL url = new URL(urls[0]);
+                HttpURLConnection.setFollowRedirects(false);
+            // note : you may also need
+            //        HttpURLConnection.setInstanceFollowRedirects(false)
+                HttpURLConnection con =
+                        (HttpURLConnection) url.openConnection();
+                con.setRequestMethod("HEAD");
+                x=(con.getResponseCode() == HttpURLConnection.HTTP_OK);
+                return x;
+            } catch (Exception e) {
+                this.exception = e;
+                x=false;
+                return x;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Boolean feed) {
+            // TODO: check this.exception
+            // TODO: do something with the feed
+            returnValue(x);
+        }
+
+    }
+
+
 
 }
