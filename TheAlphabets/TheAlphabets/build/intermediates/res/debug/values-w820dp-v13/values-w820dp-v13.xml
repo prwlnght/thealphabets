@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- From: file:/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/src/main/res/values-w820dp/dimens.xml -->
+    <!-- From: file:/Users/Paperwhite/GitHub/cse535/TheAlphabets/TheAlphabets/src/main/res/values-w820dp/dimens.xml -->
     <eat-comment/>
     <dimen name="activity_horizontal_margin">64dp</dimen>
 </resources>
