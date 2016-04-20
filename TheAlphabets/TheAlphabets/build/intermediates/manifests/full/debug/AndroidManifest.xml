@@ -28,8 +28,7 @@
         <activity
             android:name="com.cse535.thealphabets.MainActivity"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" >
-        </activity>
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.cse535.thealphabets.TrainActivity"
             android:label="Train"

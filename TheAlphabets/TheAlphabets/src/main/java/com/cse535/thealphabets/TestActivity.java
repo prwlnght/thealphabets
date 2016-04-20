@@ -1,7 +1,7 @@
 package com.cse535.thealphabets;
+
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,13 +14,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.thalmic.myo.AbstractDeviceListener;
-import com.thalmic.myo.Arm;
 import com.thalmic.myo.DeviceListener;
 import com.thalmic.myo.Hub;
-import com.thalmic.myo.Myo;
-import com.thalmic.myo.Pose;
-import com.thalmic.myo.Quaternion;
-import com.thalmic.myo.XDirection;
 import com.thalmic.myo.scanner.ScanActivity;
 
 public class TestActivity extends Activity {
