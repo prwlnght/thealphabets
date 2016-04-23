@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TheAlphabets.iml" filepath="$PROJECT_DIR$/TheAlphabets.iml" />
       <module fileurl="file://$PROJECT_DIR$/TheAlphabets/TheAlphabets-TheAlphabets.iml" filepath="$PROJECT_DIR$/TheAlphabets/TheAlphabets-TheAlphabets.iml" />
+      <module fileurl="file://$PROJECT_DIR$/myolib/myolib.iml" filepath="$PROJECT_DIR$/myolib/myolib.iml" />
     </modules>
   </component>
 </project>

@@ -3,6 +3,7 @@
     <CLASSES>
       <root url="file://$PROJECT_DIR$/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/res" />
       <root url="jar://$PROJECT_DIR$/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/jars/classes.jar!/" />
+      <root url="jar://$PROJECT_DIR$/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/jars/libs/native-libs.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
