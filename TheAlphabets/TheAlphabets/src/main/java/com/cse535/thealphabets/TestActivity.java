@@ -106,14 +106,14 @@ public class TestActivity extends Activity {
         }
 
 
-        DATABASE_LOCATION = SDCARD_LOCATION + "/Assignment2DB";
+        //DATABASE_LOCATION = SDCARD_LOCATION + "/Assignment2DB";
 
         testButton = (Button) findViewById(R.id.button);
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds",Toast.LENGTH_LONG).show();
+               // Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds",Toast.LENGTH_LONG).show();
 
                 Log.d("Demo", "onClick: starting srvice");
                 new Thread(new Runnable() {
@@ -310,6 +310,7 @@ public class TestActivity extends Activity {
                 InputStream is = conn.getInputStream();
                 String parsedString = convertinputStreamToString(is);
                 final String toSpeak= ".."+parsedString.charAt(2);
+                System.out.println(parsedString);
                 t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                     @Override
                     public void onInit(int status) {
