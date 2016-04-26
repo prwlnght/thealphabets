@@ -126,7 +126,7 @@ public class TestActivity extends Activity {
 
                     }
                 }).start();
-                Toast.makeText(TestActivity.this, "DB uploaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TestActivity.this, "Data Uploaded", Toast.LENGTH_SHORT).show();
 
 
                 ImageView image;

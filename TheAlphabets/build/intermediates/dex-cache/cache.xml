@@ -9,18 +9,25 @@
         <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/cse535/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/classes-6e98b46f734ab2e226138bdb8d73ca06004e6be3.jar" />
     </item>
     <item
-        jar="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/Version2/TheAlphabets/TheAlphabets/build/intermediates/exploded-aar/com.android.support/appcompat-v7/18.0.0/jars/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="8f11f56e350eacabf2273f646d981356eea0ed77">
-        <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/Version2/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/classes-ba9aa9262d3699f9ffcc5ad9546639c05fd3d8c2.jar" />
-    </item>
-    <item
         jar="/Users/shwetachoudhary/Desktop/ASU/CSE535/cse535/TheAlphabets/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/jars/libs/native-libs.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="d24ac9790966ffbd1bd9d921a262572c94903027">
         <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/cse535/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/native-libs-f3403d1259259b9e564c4aeaeee5e207f54bcaf0.jar" />
+    </item>
+    <item
+        jar="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/build/intermediates/exploded-aar/com.android.support/appcompat-v7/18.0.0/jars/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="8f11f56e350eacabf2273f646d981356eea0ed77">
+        <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/classes-ee995de4df97bfa237fd9ecff7d2ed0a4b5348f0.jar" />
+    </item>
+    <item
+        jar="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/jars/classes.jar"
+        jumboMode="false"
+        revision="19.1.0"
+        sha1="d189db75174a41996c33bb243d2228aacf10fa53">
+        <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/classes-c4bede8ef63bf59c3d436efadb7958417715eb19.jar" />
     </item>
     <item
         jar="/Users/shwetachoudhary/Desktop/ASU/CSE535/cse535/TheAlphabets/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/jars/classes.jar"
@@ -37,18 +44,11 @@
         <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/cse535/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/support-v4-18.0.0-f30ab8a3cb4acf57c10f5c77dfa0ea517709ecec.jar" />
     </item>
     <item
-        jar="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/Version2/TheAlphabets/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/jars/classes.jar"
-        jumboMode="false"
-        revision="19.1.0"
-        sha1="d189db75174a41996c33bb243d2228aacf10fa53">
-        <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/Version2/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/classes-ceb9e9a2a5edfc79d750af39efa3bb955591968b.jar" />
-    </item>
-    <item
-        jar="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/Version2/TheAlphabets/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/jars/libs/native-libs.jar"
+        jar="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/build/intermediates/exploded-aar/com.thalmic/myosdk/0.10.0/jars/libs/native-libs.jar"
         jumboMode="false"
         revision="19.1.0"
         sha1="d24ac9790966ffbd1bd9d921a262572c94903027">
-        <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/Version2/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/native-libs-6eb075881219a6f25ac7eb798bd539e20b7be92c.jar" />
+        <dex dex="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/TheAlphabets/build/intermediates/pre-dexed/debug/native-libs-a66de30389228a562f9934f6831e7bc7f9748ff0.jar" />
     </item>
 
 </items>

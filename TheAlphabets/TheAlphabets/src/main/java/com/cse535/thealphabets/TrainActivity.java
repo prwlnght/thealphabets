@@ -141,19 +141,19 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
                         gyroscopeData = myoReader.getGyroscopeData();
                         orienationData = myoReader.getOrienationData();
                         for (int i = 0; i < orienationData.size(); i++) {
-                            roll_w = Math.atan2(2.0d * ((orienationData.get(i).w() * orienationData.get(i).x()) + (orienationData.get(i).y() * orienationData.get(i).z())), 1.0d - 2.0f * ((orienationData.get(i).x() * orienationData.get(i).x())
+                            roll_w = Math.atan2(2.0f * ((orienationData.get(i).w() * orienationData.get(i).x()) + (orienationData.get(i).y() * orienationData.get(i).z())), 1.0f - 2.0f * ((orienationData.get(i).x() * orienationData.get(i).x())
                                     + (orienationData.get(i).y() * orienationData.get(i).y())));
+                            Integer roll_rad = (int) (((roll_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
 
-                            Integer roll_rad = (int) (((roll_w + (double) Math.PI) / Math.PI * 2.0d) * 180);
+                            pitch_w = Math.asin(Math.max(-1.0f, Math.min(1.0f, 2.0f * (orienationData.get(i).w() * orienationData.get(i).y() - orienationData.get(i).z() * orienationData.get(i).x()))));
+                            Integer pitch_rad = (int) (((pitch_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
 
-                            pitch_w = Math.asin(Math.max(-1.0d, Math.min(1.0d, 2.0d * (orienationData.get(i).w() * orienationData.get(i).y() - orienationData.get(i).z() * orienationData.get(i).x()))));
-                            Integer pitch_rad = (int) (((pitch_w + (double) Math.PI) / Math.PI * 2.0d) * 180);
-                            yaw_w = Math.atan2(2.0d * (orienationData.get(i).w() * orienationData.get(i).z() + orienationData.get(i).x() * orienationData.get(i).y()), 1.0d - 2.0d * (orienationData.get(i).y() * orienationData.get(i).y() + orienationData.get(i).z() * orienationData.get(i).z()));
-                            Integer yaw_rad = (int) (((yaw_w + (double) Math.PI) / Math.PI * 2.0d) * 180);
+                            yaw_w = Math.atan2(2.0f * (orienationData.get(i).w() * orienationData.get(i).z() + orienationData.get(i).x() * orienationData.get(i).y()), 1.0f - 2.0f * (orienationData.get(i).y() * orienationData.get(i).y() + orienationData.get(i).z() * orienationData.get(i).z()));
+                            Integer yaw_rad = (int) (((yaw_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
 
                             roll.add(roll_rad);
-                            yaw.add(yaw_rad);
                             pitch.add(pitch_rad);
+                            yaw.add(yaw_rad);
                         }
 
                         FileWriter fileWriter = null;
@@ -165,7 +165,7 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
                                 attempt = 1;
 
                             fileWriter = new FileWriter(SDCARD_LOCATION + "/" + LoginActivity.user + "_alphabets_" + selected + "_" + attempt +  ".csv");
-                            for (int i = 0; i < 50; i = i + 5) {
+                            for (int i = 0; i < accelerometerData.size(); i = i + 5) {
                                 fileWriter.append(Double.toString(accelerometerData.get(i).x()));
                                 fileWriter.append(COMMA_DELIMITER);
                                 fileWriter.append(Double.toString(accelerometerData.get(i).y()));
