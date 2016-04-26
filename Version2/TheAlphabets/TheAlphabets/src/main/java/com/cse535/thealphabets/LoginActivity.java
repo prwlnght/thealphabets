@@ -74,7 +74,7 @@ public class LoginActivity extends Activity {
             focusView.requestFocus();
         } else {
 
-            Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
             new RetrieveFeedTaskImpl().execute("http://10.143.6.126/" + email);
 
         }
@@ -83,16 +83,16 @@ public class LoginActivity extends Activity {
     public void returnValue(Boolean result) {
 
         if(result){
-
-            System.out.println("Login successful");
+            Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
             mAuthTask = true;
             user = email;
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
 
         }
-        else
-            System.out.println("Login failed");
+        else {
+            Toast.makeText(this, "Login Failed", Toast.LENGTH_SHORT).show();
+        }
 
     }
 

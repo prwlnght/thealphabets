@@ -125,8 +125,7 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
             @Override
             public void onClick(View view) {
 
-                Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds" + SDCARD_LOCATION,Toast.LENGTH_LONG).show();
-
+                Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds",Toast.LENGTH_LONG).show();
                 trainButton.setEnabled(false);
                 myoReader = new ReadMyo(hub);
                 myoReader.reset();
@@ -162,7 +161,7 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
                         FileWriter fileWriter = null;
 
                         try {
-                            fileWriter = new FileWriter(SDCARD_LOCATION + LoginActivity.user + "/alphabets.csv");
+                            fileWriter = new FileWriter(SDCARD_LOCATION + "/" + LoginActivity.user + "_alphabets_" + selected +  ".csv");
                             for (int i = 0; i < accelerometerData.size(); i = i + 5) {
                                 fileWriter.append(Double.toString(accelerometerData.get(i).x()));
                                 fileWriter.append(COMMA_DELIMITER);

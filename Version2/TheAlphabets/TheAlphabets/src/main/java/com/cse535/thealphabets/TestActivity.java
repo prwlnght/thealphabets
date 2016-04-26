@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.SystemClock;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Menu;
@@ -114,7 +115,7 @@ public class TestActivity extends Activity {
                 Log.d("Demo", "onClick: starting srvice");
                 new Thread(new Runnable() {
                     public void run() {
-
+                        SystemClock.sleep(5000);
                         uploadFile(DATABASE_LOCATION);
 
                     }
@@ -302,7 +303,7 @@ public class TestActivity extends Activity {
                 serverResponseCode = conn.getResponseCode();
                 InputStream is = conn.getInputStream();
                 String parsedString = convertinputStreamToString(is);
-                final String toSpeak= ".."+parsedString.charAt(8);
+                final String toSpeak= ".."+parsedString.charAt(2);
                 t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                     @Override
                     public void onInit(int status) {
