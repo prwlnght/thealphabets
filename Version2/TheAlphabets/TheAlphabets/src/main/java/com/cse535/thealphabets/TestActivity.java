@@ -113,10 +113,12 @@ public class TestActivity extends Activity {
             @Override
             public void onClick(View view) {
 
+                Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds",Toast.LENGTH_LONG).show();
+
                 Log.d("Demo", "onClick: starting srvice");
                 new Thread(new Runnable() {
                     public void run() {
-                        int classNumberToUse = (classNumber % 7) +1;
+                        int classNumberToUse = (classNumber % 7) + 1;
                         DATABASE_LOCATION = SDCARD_LOCATION + "/test" +Integer.toString(classNumberToUse)+ ".csv";
                         SystemClock.sleep(5000);
                         uploadFile(DATABASE_LOCATION);
