@@ -160,10 +160,29 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
 
                         FileWriter fileWriter = null;
 
+
                         try {
                             fileWriter = new FileWriter(SDCARD_LOCATION + "/" + LoginActivity.user + "_alphabets_" + selected +  ".csv");
-                            for (int i = 0; i < accelerometerData.size(); i = i + 5) {
-                                fileWriter.append(Double.toString(accelerometerData.get(i).x()));
+                            for (int i = 0; i < 50; i = i + 5) {
+                                /*fileWriter.append(Double.toString(accelerometerData.get(i).x()));
+                                fileWriter.append(COMMA_DELIMITER);
+                                fileWriter.append(Double.toString(accelerometerData.get(i).y()));
+                                fileWriter.append(COMMA_DELIMITER);
+                                fileWriter.append(Double.toString(accelerometerData.get(i).z()));
+                                fileWriter.append(COMMA_DELIMITER);
+                                fileWriter.append(Double.toString(gyroscopeData.get(i).x()));
+                                fileWriter.append(COMMA_DELIMITER);
+                                fileWriter.append(Double.toString(gyroscopeData.get(i).y()));
+                                fileWriter.append(COMMA_DELIMITER);
+                                fileWriter.append(Double.toString(gyroscopeData.get(i).z()));
+                                fileWriter.append(COMMA_DELIMITER);
+                                fileWriter.append(Double.toString(roll.get(i)));
+                                fileWriter.append(COMMA_DELIMITER);
+                                fileWriter.append(Double.toString(pitch.get(i)));
+                                fileWriter.append(COMMA_DELIMITER);
+                                fileWriter.append(Double.toString(yaw.get(i)));
+                                fileWriter.append(NEW_LINE_SEPARATOR);*/
+                                fileWriter.write(Double.toString(accelerometerData.get(i).x()));
                                 fileWriter.append(COMMA_DELIMITER);
                                 fileWriter.append(Double.toString(accelerometerData.get(i).y()));
                                 fileWriter.append(COMMA_DELIMITER);
