@@ -38,7 +38,7 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
 
     private Button trainButton;
     private ReadMyo myoReader;
-
+    private int attempt;
     private String selected;
 
     private List<Vector3> accelerometerData = new ArrayList<Vector3>();
@@ -159,7 +159,12 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
                         FileWriter fileWriter = null;
 
                         try {
-                            fileWriter = new FileWriter(SDCARD_LOCATION + "/" + LoginActivity.user + "_alphabets_" + selected +  ".csv");
+                            attempt++;
+
+                            if (attempt > 5)
+                                attempt = 1;
+
+                            fileWriter = new FileWriter(SDCARD_LOCATION + "/" + LoginActivity.user + "_alphabets_" + selected + "_" + attempt +  ".csv");
                             for (int i = 0; i < 50; i = i + 5) {
                                 fileWriter.append(Double.toString(accelerometerData.get(i).x()));
                                 fileWriter.append(COMMA_DELIMITER);
@@ -180,6 +185,8 @@ public class TrainActivity extends Activity implements AdapterView.OnItemSelecte
                                 fileWriter.append(Double.toString(yaw.get(i)));
                                 fileWriter.append(NEW_LINE_SEPARATOR);
                             }
+
+
                         } catch (Exception e) {
                             System.out.println("Error in CSV FileWriter !!!");
                             e.printStackTrace();
