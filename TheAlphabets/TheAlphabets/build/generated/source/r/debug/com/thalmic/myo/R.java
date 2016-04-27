@@ -24,12 +24,12 @@ public final class R {
 		public static final int myosdk__firmware_incompatible_dot = 0x7f02009b;
 	}
 	public static final class id {
-		public static final int myosdk__action_scan = 0x7f0b0058;
-		public static final int myosdk__connection_state_dot = 0x7f0b0051;
-		public static final int myosdk__fragment_scan = 0x7f0b004e;
-		public static final int myosdk__progress = 0x7f0b0050;
-		public static final int myosdk__required_firmware_version_text = 0x7f0b004f;
-		public static final int myosdk__scan_result_view = 0x7f0b0052;
+		public static final int myosdk__action_scan = 0x7f0b005a;
+		public static final int myosdk__connection_state_dot = 0x7f0b0053;
+		public static final int myosdk__fragment_scan = 0x7f0b0050;
+		public static final int myosdk__progress = 0x7f0b0052;
+		public static final int myosdk__required_firmware_version_text = 0x7f0b0051;
+		public static final int myosdk__scan_result_view = 0x7f0b0054;
 	}
 	public static final class layout {
 		public static final int myosdk__activity_scan = 0x7f04001c;

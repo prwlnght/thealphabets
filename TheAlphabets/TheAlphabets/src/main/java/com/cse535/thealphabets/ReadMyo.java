@@ -63,7 +63,7 @@ public class ReadMyo extends AbstractDeviceListener {
         gyroscopeData.add(gyro);
     }
 
-    @Override
+   /* @Override
     public void onPose (Myo myo, long timestamp, Pose pose){
         switch (pose) {
             case UNKNOWN:
@@ -95,7 +95,7 @@ public class ReadMyo extends AbstractDeviceListener {
                 mTextView.setText(R.string.pose_fingersspread);
                 break;
         }
-    }
+    }*/
 
 
     public List<Vector3> getAccelerometerData() {

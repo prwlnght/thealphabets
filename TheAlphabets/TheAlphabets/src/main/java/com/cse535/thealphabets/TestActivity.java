@@ -54,9 +54,14 @@ import android.os.Environment;
 public class TestActivity extends Activity {
 
 
-    private Button testButton;
+    private Button testButton, correctButton, incorrectButton;
     String DATABASE_LOCATION, SDCARD_LOCATION;
     private TextView mTextView;
+    TextToSpeech t2;
+    TextToSpeech t3;
+    String correct="..correct";
+    String incorrect="..incorrect";
+
 
     private DeviceListener mListener = new AbstractDeviceListener() {
 
@@ -104,8 +109,52 @@ public class TestActivity extends Activity {
                 }
             }
         }
+        correctButton = (Button) findViewById(R.id.correct);
+        correctButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                t2=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                    @Override
+                    public void onInit(int status) {
+                        if(status != TextToSpeech.ERROR) {
+
+                            t1.setLanguage(Locale.UK);
+                            //Toast.makeText(getApplicationContext(), correct,Toast.LENGTH_SHORT).show();
+                            t1.speak(correct, TextToSpeech.QUEUE_FLUSH, null);
+
+                            //setImage(correct);
+                        }
+                    }
+                });
 
 
+            }
+
+        });
+
+        incorrectButton = (Button) findViewById(R.id.incorrect);
+        incorrectButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                t3=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                    @Override
+                    public void onInit(int status) {
+                        if(status != TextToSpeech.ERROR) {
+
+                            t1.setLanguage(Locale.UK);
+                            //Toast.makeText(getApplicationContext(), incorrect,Toast.LENGTH_SHORT).show();
+                            t1.speak(incorrect, TextToSpeech.QUEUE_FLUSH, null);
+
+                            //setImage(incorrect);
+                        }
+                    }
+                });
+
+
+
+            }
+
+        });
         //DATABASE_LOCATION = SDCARD_LOCATION + "/Assignment2DB";
 
         testButton = (Button) findViewById(R.id.button);
@@ -114,10 +163,11 @@ public class TestActivity extends Activity {
             public void onClick(View view) {
 
                // Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds",Toast.LENGTH_LONG).show();
-
+                //testButton.setEnabled(false);
                 Log.d("Demo", "onClick: starting srvice");
                 new Thread(new Runnable() {
                     public void run() {
+                        //testButton.setEnabled(true);
                         int classNumberToUse = (classNumber % 7) + 1;
                         DATABASE_LOCATION = SDCARD_LOCATION + "/test" +Integer.toString(classNumberToUse)+ ".csv";
                         SystemClock.sleep(5000);
@@ -126,7 +176,7 @@ public class TestActivity extends Activity {
 
                     }
                 }).start();
-                Toast.makeText(TestActivity.this, "Data Uploaded", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TestActivity.this, "Data Uploading", Toast.LENGTH_SHORT).show();
 
 
                 ImageView image;
