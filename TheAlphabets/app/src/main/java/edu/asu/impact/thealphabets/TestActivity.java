@@ -20,10 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,6 +36,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -77,6 +80,37 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
     private String CurrentfilePath;
     private Myo CurrentMyo;
     private boolean myoConnection = false;
+    private int attempt;
+    private File savedMyoFile = null;
+    private String selected;
+
+    private List<Double> accelerometerXData = new ArrayList<Double>();
+    private List<Double> accelerometerYData = new ArrayList<Double>();
+    private List<Double> accelerometerZData = new ArrayList<Double>();
+    private List<Double> gyroscopeXData = new ArrayList<Double>();
+    private List<Double> gyroscopeYData = new ArrayList<Double>();
+    private List<Double> gyroscopeZData = new ArrayList<Double>();
+    private List<Double> orientationWData = new ArrayList<Double>();
+    private List<Double> orientationXData = new ArrayList<Double>();
+    private List<Double> orientationYData = new ArrayList<Double>();
+    private List<Double> orientationZData = new ArrayList<Double>();
+    private List<Byte> emgDataList0 = new ArrayList<Byte>();
+    private List<Byte> emgDataList1 = new ArrayList<Byte>();
+    private List<Byte> emgDataList2 = new ArrayList<Byte>();
+    private List<Byte> emgDataList3 = new ArrayList<Byte>();
+    private List<Byte> emgDataList4 = new ArrayList<Byte>();
+    private List<Byte> emgDataList5 = new ArrayList<Byte>();
+    private List<Byte> emgDataList6 = new ArrayList<Byte>();
+    private List<Byte> emgDataList7 = new ArrayList<Byte>();
+
+    private List<Integer> roll = new ArrayList<Integer>();
+    private List<Integer> yaw = new ArrayList<Integer>();
+    private List<Integer> pitch = new ArrayList<Integer>();
+
+    private static final String COMMA_DELIMITER = ",";
+    private static final String NEW_LINE_SEPARATOR = "\n";
+
+
 
     TextToSpeech t1;
     int classNumber = 0;
@@ -178,15 +212,15 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
             }
 
         });
-        //DATABASE_LOCATION = SDCARD_LOCATION + "/Assignment2DB";
+
 
         testButton = (Button) findViewById(R.id.button);
         testButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                // Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds",Toast.LENGTH_LONG).show();
-                //testButton.setEnabled(false);
+                Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds",Toast.LENGTH_LONG).show();
+                testButton.setEnabled(false);
                 Log.d("Demo", "onClick: starting srvice");
                 new Thread(new Runnable() {
                     public void run() {
@@ -199,17 +233,138 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
 
                     }
                 }).start();
-                Toast.makeText(TestActivity.this, "Data Uploading", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(TestActivity.this, "Data Uploading", Toast.LENGTH_SHORT).show();
 
 
                 ImageView image;
                 image = (ImageView) findViewById(R.id.imageViewTest);
                 image.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
+                WriteMode = true;
+
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        double roll_w, yaw_w, pitch_w;
+                        WriteMode = false;
+                        testButton.setEnabled(true);
+
+                        System.out.print("EMG SIZE" + emgDataList0.size());
+
+                        if (emgDataList0.size() >= 250) {
+
+                            attempt++;
+
+                            if (attempt > 5) //to ensure that only 5 iterations are stored for each Alphabet per user
+                                attempt = 1;
+
+                            double w, x, y, z;
+
+
+                            for (int i = 0; i < accelerometerXData.size(); i++) {
+
+                                w = orientationWData.get(i);
+                                x = orientationXData.get(i);
+                                y = orientationYData.get(i);
+                                z = orientationZData.get(i);
+
+                                roll_w = Math.atan2(2.0f * ((w * x) + (y * z)), 1.0f - 2.0f * (x * x + y * y));
+                                Integer roll_rad = (int) (((roll_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
+
+                                pitch_w = Math.asin(Math.max(-1.0f, Math.min(1.0f, 2.0f * (w * y - z * x))));
+                                Integer pitch_rad = (int) (((pitch_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
+
+                                yaw_w = Math.atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z));
+                                Integer yaw_rad = (int) (((yaw_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
+
+                                roll.add(roll_rad);
+                                pitch.add(pitch_rad);
+                                yaw.add(yaw_rad);
+                            }
+
+                            saveFileName = CurrentfilePath + "/" + LoginActivity.user+ "_alphabets_test" + "_" + attempt;
+                            //System.out.print("ACCELEROMETER SIZE" + accelerometerXData.size());
+
+                            //System.out.println("Acclerometer x:" + accelerometerXData.get(0) + " y:" + accelerometerYData.get(0) + " z:" + accelerometerZData.get(0));
+                            //System.out.println("Gyroscope x:" + gyroscopeXData.get(0) + " y:" + gyroscopeYData.get(0) + " z:" + gyroscopeZData.get(0));
+                            // System.out.println("Roll:" + roll.get(0) + " Pitch:" + pitch.get(0) + " Yaw:" + yaw.get(0));
+                            //System.out.println("EMG 0:" + emgDataList0.get(0) + " 1:" + emgDataList1.get(0) + " 2:" + emgDataList3.get(0) + " 3:" + emgDataList3.get(0) +  " 4:" + emgDataList4.get(0) + " 5:" + emgDataList5.get(0) + " 6:" + emgDataList6.get(0) + " 7:" + emgDataList7.get(0));
+
+                            //saveFileName = CurrentfilePath + "/" + "shibani" + "_alphabets_" + selected + "_" + attempt;
+                            savedMyoFile = saveMyoData();
+                        }
+
+
+                    }
+                }, 5000);
+
             }
         });
 
     }
+
+    public File saveMyoData() {
+
+        String filePath = saveFileName + ".csv";
+
+        File myoData = new File(filePath);
+
+        if (!myoData.exists()) {
+            try {
+                myoData.createNewFile();
+                FileWriter fw = new FileWriter(myoData.getAbsoluteFile(),false);
+                BufferedWriter bw = new BufferedWriter(fw);
+
+                for (int i=0; i<250; i = i + 5) {
+
+                    bw.write(Double.toString(emgDataList0.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(emgDataList1.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(emgDataList2.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(emgDataList3.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(emgDataList4.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(emgDataList5.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(emgDataList6.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(emgDataList7.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(accelerometerXData.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(accelerometerYData.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(gyroscopeXData.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(gyroscopeYData.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(gyroscopeZData.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(roll.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(pitch.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(yaw.get(i)));
+                    bw.write(NEW_LINE_SEPARATOR);
+
+                }
+                bw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        File returnFile = myoData;
+        return returnFile;
+    }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -264,14 +419,14 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
     int serverResponseCode = 0;
 
     // String upLoadServerUri = null;
-    final String upLoadServerUri = "http://10.143.6.126/UploadToServer.php";
+    final String upLoadServerUri = "http://10.143.108.143/UploadToServer.php";
     //String upLoadServerUri = "https://impact.asu.edu/Appenstance/UploadToServer.php";
 
 
     public int uploadFile(String sourceFileUri){
 
         String fileName = sourceFileUri;
-        System.out.println("Location: " + sourceFileUri);
+        //System.out.println("Location: " + sourceFileUri);
         HttpURLConnection conn = null;
         DataOutputStream dos = null;
         String lineEnd = "\r\n";
@@ -427,57 +582,82 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
 
         if (alpha == 'A') {
             image.setImageResource(R.drawable.ic_a);
-            System.out.println(alpha);
+            selected = "A";
         } else if (alpha == 'B') {
             image.setImageResource(R.drawable.ic_b);
+            selected = "B";
         } else if (alpha == 'C') {
             image.setImageResource(R.drawable.ic_c);
+            selected = "C";
         } else if (alpha == 'D') {
             image.setImageResource(R.drawable.ic_d);
+            selected = "D";
         } else if (alpha == 'E') {
             image.setImageResource(R.drawable.ic_e);
+            selected = "E";
         } else if (alpha == 'F') {
             image.setImageResource(R.drawable.ic_f);
+            selected = "F";
         } else if (alpha == 'G') {
             image.setImageResource(R.drawable.ic_g);
+            selected = "G";
         } else if (alpha == 'H') {
             image.setImageResource(R.drawable.ic_h);
+            selected = "H";
         } else if (alpha == 'I') {
             image.setImageResource(R.drawable.ic_i);
+            selected = "I";
         } else if (alpha == 'J') {
             image.setImageResource(R.drawable.ic_j);
+            selected = "J";
         } else if (alpha == 'K') {
             image.setImageResource(R.drawable.ic_k);
+            selected = "K";
         } else if (alpha == 'L') {
             image.setImageResource(R.drawable.ic_l);
+            selected = "L";
         } else if (alpha == 'M') {
             image.setImageResource(R.drawable.ic_m);
+            selected = "M";
         } else if (alpha == 'N') {
             image.setImageResource(R.drawable.ic_n);
+            selected = "N";
         } else if (alpha == 'O') {
             image.setImageResource(R.drawable.ic_o);
+            selected = "O";
         } else if (alpha == 'P') {
             image.setImageResource(R.drawable.ic_p);
+            selected = "P";
         } else if (alpha == 'Q') {
             image.setImageResource(R.drawable.ic_q);
+            selected = "Q";
         } else if (alpha == 'R') {
             image.setImageResource(R.drawable.ic_r);
+            selected = "R";
         } else if (alpha == 'S') {
             image.setImageResource(R.drawable.ic_s);
+            selected = "S";
         } else if (alpha == 'T') {
             image.setImageResource(R.drawable.ic_t);
+            selected = "T";
         } else if (alpha == 'U') {
             image.setImageResource(R.drawable.ic_u);
+            selected = "U";
         } else if (alpha == 'V') {
             image.setImageResource(R.drawable.ic_v);
+            selected = "V";
         } else if (alpha == 'W') {
             image.setImageResource(R.drawable.ic_w);
+            selected = "W";
         } else if (alpha == 'X') {
             image.setImageResource(R.drawable.ic_x);
+            selected = "X";
         } else if (alpha == 'Y') {
             image.setImageResource(R.drawable.ic_y);
+            selected = "Y";
         } else if (alpha == 'Z') {
             image.setImageResource(R.drawable.ic_z);
+            selected = "Z";
         } else if (alpha == '0') {
             image.setImageResource(R.drawable.ic_number0);
         } else if (alpha == '1') {
@@ -659,7 +839,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
                                     String saveTime = Long.toString(System.currentTimeMillis());
                                     String eData = Arrays.toString( emgData.getData() );
                                     if (WriteMode){
-                                        Log.d("emg data: ",eData);
+                                        //Log.d("emg data: ",eData);
                                         EMGDataset.put(saveTime, eData);
                                     }
                                     //mLastEmgUpdate = System.currentTimeMillis();

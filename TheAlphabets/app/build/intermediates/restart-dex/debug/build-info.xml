@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <instant-run
     abi="armeabi-v7a,armeabi"
-    api-level="23"
-    density="xhdpi"
+    api-level="21"
+    density="xxhdpi"
     format="7"
-    timestamp="1461905598661360000" >
+    timestamp="1462239386492018000" >
 
     <task
         name="javac"
@@ -20,13 +20,18 @@
         duration="0" />
 
     <artifact
-        location="/Users/shwetachoudhary/Desktop/TheAlphabets/app/build/outputs/apk/app-debug.apk"
-        type="MAIN" />
+        location="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/app/build/intermediates/res/resources-debug.ap_"
+        type="RESOURCES" />
 
-    <build timestamp="1461905598661360000" >
+    <build timestamp="1462238467793596000" >
         <artifact
-            location="/Users/shwetachoudhary/Desktop/TheAlphabets/app/build/outputs/apk/app-debug.apk"
+            location="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/app/build/outputs/apk/app-debug.apk"
             type="MAIN" />
+    </build>
+    <build timestamp="1462239386492018000" >
+        <artifact
+            location="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/app/build/intermediates/res/resources-debug.ap_"
+            type="RESOURCES" />
     </build>
 
 </instant-run>

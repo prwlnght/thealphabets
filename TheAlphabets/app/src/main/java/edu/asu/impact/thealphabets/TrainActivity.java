@@ -133,7 +133,6 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
             myoConnection = true;
 
             CurrentfilePath = SDCARD_LOCATION;
-            System.out.print(CurrentfilePath);
             File isPath = new File(CurrentfilePath);
             if (!isPath.isDirectory())
                 isPath.mkdirs();
@@ -155,6 +154,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View view) {
 
+
                 Toast.makeText(getApplicationContext(), "Recording MYO Data for 5 seconds", Toast.LENGTH_LONG).show();
                 trainButton.setEnabled(false);
                 WriteMode = true;
@@ -168,31 +168,52 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                         WriteMode = false;
                         trainButton.setEnabled(true);
 
-                        attempt++;
+                        System.out.print("ACCELEROMETER SIZE" + accelerometerXData.size());
 
-                        if (attempt > 5) //to ensure that only 5 iterations are stored for each Alphabet per user
-                            attempt = 1;
+                        if (accelerometerXData.size() >= 250) {
 
-                        //saveFileName = LoginActivity.user+ "_alphabets_" + selected + "_" + attempt;
+                            attempt++;
 
-                        saveFileName = "shibani" + "_alphabets_" + selected + "_" + attempt;
-                        savedMyoFile = saveMyoData();
+                            if (attempt > 5) //to ensure that only 5 iterations are stored for each Alphabet per user
+                                attempt = 1;
 
-                       for (int i = 0; i < orientationWData.size(); i++) {
-                            roll_w = Math.atan2(2.0f * ((orientationWData.get(i) * orientationXData.get(i)) + (orientationYData.get(i) * orientationZData.get(i))), 1.0f - 2.0f * ((orientationXData.get(i) * orientationXData.get(i))
-                                   + (orientationYData.get(i) * orientationYData.get(i))));
-                            Integer roll_rad = (int) (((roll_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
+                            double w, x, y, z;
 
-                            pitch_w = Math.asin(Math.max(-1.0f, Math.min(1.0f, 2.0f * (orientationWData.get(i) * orientationYData.get(i) - orientationZData.get(i) * orientationXData.get(i)))));
-                            Integer pitch_rad = (int) (((pitch_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
 
-                           yaw_w = Math.atan2(2.0f * (orientationWData.get(i) * orientationZData.get(i) + orientationXData.get(i) * orientationYData.get(i)), 1.0f - 2.0f * (orientationYData.get(i) * orientationYData.get(i) + orientationZData.get(i) * orientationZData.get(i)));
-                            Integer yaw_rad = (int) (((yaw_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
+                            for (int i = 0; i < accelerometerXData.size(); i++) {
 
-                            roll.add(roll_rad);
-                            pitch.add(pitch_rad);
-                            yaw.add(yaw_rad);
+                                w = orientationWData.get(i);
+                                x = orientationXData.get(i);
+                                y = orientationYData.get(i);
+                                z = orientationZData.get(i);
+
+                                roll_w = Math.atan2(2.0f * ((w * x) + (y * z)), 1.0f - 2.0f * (x * x + y * y));
+                                Integer roll_rad = (int) (((roll_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
+
+                                pitch_w = Math.asin(Math.max(-1.0f, Math.min(1.0f, 2.0f * (w * y - z * x))));
+                                Integer pitch_rad = (int) (((pitch_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
+
+                                yaw_w = Math.atan2(2.0f * (w * z + x * y), 1.0f - 2.0f * (y * y + z * z));
+                                Integer yaw_rad = (int) (((yaw_w + (float) Math.PI) / Math.PI * 2.0f) * 180);
+
+                                roll.add(roll_rad);
+                                pitch.add(pitch_rad);
+                                yaw.add(yaw_rad);
+                            }
+
+                            saveFileName = CurrentfilePath + "/" + LoginActivity.user+ "_alphabets_" + selected + "_" + attempt;
+                            //System.out.print("ACCELEROMETER SIZE" + accelerometerXData.size());
+
+                            //System.out.println("Acclerometer x:" + accelerometerXData.get(0) + " y:" + accelerometerYData.get(0) + " z:" + accelerometerZData.get(0));
+                            //System.out.println("Gyroscope x:" + gyroscopeXData.get(0) + " y:" + gyroscopeYData.get(0) + " z:" + gyroscopeZData.get(0));
+                           // System.out.println("Roll:" + roll.get(0) + " Pitch:" + pitch.get(0) + " Yaw:" + yaw.get(0));
+                            //System.out.println("EMG 0:" + emgDataList0.get(0) + " 1:" + emgDataList1.get(0) + " 2:" + emgDataList3.get(0) + " 3:" + emgDataList3.get(0) +  " 4:" + emgDataList4.get(0) + " 5:" + emgDataList5.get(0) + " 6:" + emgDataList6.get(0) + " 7:" + emgDataList7.get(0));
+
+                            //saveFileName = CurrentfilePath + "/" + "shibani" + "_alphabets_" + selected + "_" + attempt;
+                            savedMyoFile = saveMyoData();
                         }
+                        else
+                            Toast.makeText(getApplicationContext(), "Not enough data, re-record", Toast.LENGTH_LONG).show();
 
                     }
                 }, 5000);
@@ -229,8 +250,6 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                             mImuProcessor.addListener(new ImuProcessor.ImuDataListener() {
                                 @Override
                                 public void onNewImuData(ImuData imuData) {
-                                    String saveTime = Long.toString(System.currentTimeMillis());
-
                                     if (WriteMode) {
                                         accelerometerXData.add(imuData.getAccelerometerData()[0]);
                                         accelerometerYData.add(imuData.getAccelerometerData()[1]);
@@ -277,7 +296,9 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
     public File saveMyoData() {
 
-        File myoData = new File(CurrentfilePath + ".csv");
+        String filePath = saveFileName + ".csv";
+
+        File myoData = new File(filePath);
 
         if (!myoData.exists()) {
             try {
@@ -285,7 +306,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                 FileWriter fw = new FileWriter(myoData.getAbsoluteFile(),false);
                 BufferedWriter bw = new BufferedWriter(fw);
 
-                for (int i=0; i<accelerometerXData.size(); i++) {
+                for (int i=0; i<250; i = i + 5) {
 
                     bw.write(Double.toString(emgDataList0.get(i)));
                     bw.write(COMMA_DELIMITER);

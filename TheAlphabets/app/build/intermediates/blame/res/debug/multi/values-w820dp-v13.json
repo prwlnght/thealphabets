@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/Users/shwetachoudhary/Desktop/TheAlphabets/app/build/intermediates/res/merged/debug/values-w820dp-v13/values-w820dp-v13.xml",
+        "outputFile": "/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/app/build/intermediates/res/merged/debug/values-w820dp-v13/values-w820dp-v13.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 108
                 },
                 "from": {
-                    "file": "/Users/shwetachoudhary/Desktop/TheAlphabets/app/src/main/res/values-w820dp/dimens.xml",
+                    "file": "/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/app/src/main/res/values-w820dp/dimens.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,

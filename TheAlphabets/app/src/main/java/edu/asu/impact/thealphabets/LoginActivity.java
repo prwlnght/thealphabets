@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         } else {
 
             //Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
-            new RetrieveFeedTaskImpl().execute("http://10.143.6.126/" + email);
+            new RetrieveFeedTaskImpl().execute("http://10.143.108.143/" + email);
 
         }
     }
@@ -72,7 +72,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
             mAuthTask = true;
             user = email;
-            Intent intent = new Intent(this, MainActivity.class);
+            Intent intent = new Intent(this, TrainActivity.class);
             startActivity(intent);
 
         }

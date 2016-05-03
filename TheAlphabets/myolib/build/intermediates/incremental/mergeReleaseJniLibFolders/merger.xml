@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/shwetachoudhary/Desktop/TheAlphabets/myolib/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/Users/shwetachoudhary/Desktop/TheAlphabets/myolib/src/release/jniLibs"/></dataSet></merger>
+<merger version="3"><dataSet config="main"><source path="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/myolib/src/main/jniLibs"/></dataSet><dataSet config="release"><source path="/Users/shwetachoudhary/Desktop/ASU/CSE535/Assignment/cse535/TheAlphabets/myolib/src/release/jniLibs"/></dataSet></merger>
