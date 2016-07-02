@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.cse535.thealphabets.TrainActivity">
+    tools:context=".TrainActivity">
 
     <TextView
         android:id="@+id/text"
@@ -24,35 +24,33 @@
         android:id="@+id/alphabets"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textViewAlphabets"
-        android:layout_marginTop="47dp"
+        android:layout_marginTop="30dp"
         android:background="@android:drawable/btn_dropdown"
-        android:spinnerMode="dropdown" />
+        android:spinnerMode="dropdown"
+        android:layout_below="@+id/textViewAlphabets"
+        android:layout_alignParentStart="true" />
 
 
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="Start" />
+        android:text="Start"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:id="@+id/textViewAlphabets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="82dp"
+        android:layout_marginTop="33dp"
         android:typeface="serif"
         android:text="Choose a character to train"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="20sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_below="@+id/text"
+        android:layout_alignParentStart="true" />
 
 
     <ImageView
@@ -64,6 +62,15 @@
         android:maxHeight="100dp"
         android:maxWidth="100dp"
         android:scaleType="fitCenter" />
+
+    <Button
+        android:id="@+id/doneButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DONE TRAINING"
+        android:onClick="onDone"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 
 </RelativeLayout>

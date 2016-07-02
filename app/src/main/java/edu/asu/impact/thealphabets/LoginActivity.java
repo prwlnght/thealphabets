@@ -61,8 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         } else {
 
             //Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
-            new RetrieveFeedTaskImpl().execute("http://10.143.108.143/" + email);
-
+            //new RetrieveFeedTaskImpl().execute("http://10.143.108.143/" + email);
+            returnValue(true);
         }
     }
 

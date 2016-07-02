@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,11 +21,15 @@ import android.widget.Toast;
 
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import eu.darken.myolib.BaseMyo;
 import eu.darken.myolib.Myo;
@@ -87,7 +92,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
     String SDCARD_LOCATION;
     private TextView mTextView;
-
+    private uploadtoserver uploadTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +103,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
         attempt = 0;
 
-        SDCARD_LOCATION = Environment.getExternalStorageDirectory().getAbsolutePath();
+        SDCARD_LOCATION = getApplicationContext().getExternalFilesDir(null).getAbsolutePath();//Environment.getExternalStorageDirectory().getAbsolutePath();
 
         if (android.os.Build.DEVICE.contains("samsung")
                 || android.os.Build.MANUFACTURER.contains("samsung")) {
@@ -115,12 +120,14 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                             .getExternalStorageDirectory().getAbsolutePath()
                             + "/external_sd";
                 }
+
             }
         }
+        Log.d("myTAG","new TAG"+SDCARD_LOCATION);
 
         Intent intent = this.getIntent();
 
-        if ((intent.getStringExtra("DeviceName") != null) ){
+        if ( (intent.getStringExtra("DeviceName") != null)){ //true
 
             String DeviceName = intent.getStringExtra("DeviceName");
             DeviceAddress =intent.getStringExtra("DeviceAddress");
@@ -132,7 +139,9 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
             mMyoConnector.scan(5000, mScannerCallback);
             myoConnection = true;
 
-            CurrentfilePath = SDCARD_LOCATION;
+            CurrentfilePath = SDCARD_LOCATION + "/" +LoginActivity.user;
+            Log.v("myTAG",CurrentfilePath);
+            Log.v("myTAG",SDCARD_LOCATION);
             File isPath = new File(CurrentfilePath);
             if (!isPath.isDirectory())
                 isPath.mkdirs();
@@ -253,7 +262,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                                     if (WriteMode) {
                                         accelerometerXData.add(imuData.getAccelerometerData()[0]);
                                         accelerometerYData.add(imuData.getAccelerometerData()[1]);
-                                        accelerometerZData.add(imuData.getGyroData()[2]);
+                                        accelerometerZData.add(imuData.getAccelerometerData()[2]);
                                         gyroscopeXData.add(imuData.getGyroData()[0]);
                                         gyroscopeYData.add(imuData.getGyroData()[1]);
                                         gyroscopeZData.add(imuData.getGyroData()[2]);
@@ -328,6 +337,8 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                     bw.write(COMMA_DELIMITER);
                     bw.write(Double.toString(accelerometerYData.get(i)));
                     bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(accelerometerZData.get(i)));
+                    bw.write(COMMA_DELIMITER);
                     bw.write(Double.toString(gyroscopeXData.get(i)));
                     bw.write(COMMA_DELIMITER);
                     bw.write(Double.toString(gyroscopeYData.get(i)));
@@ -351,6 +362,38 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
         File returnFile = myoData;
         return returnFile;
+    }
+
+    public void onDone(View v){
+        String zipFilePath = SDCARD_LOCATION+"/"+ LoginActivity.user+".zip";
+        zipFolder(CurrentfilePath,zipFilePath); //SDCARD_LOCATION
+        uploadTask = new uploadtoserver(this);
+        uploadTask.execute(SDCARD_LOCATION);
+    }
+
+    private static void zipFolder(String inputFolderPath, String outZipPath) {
+        try {
+            FileOutputStream fos = new FileOutputStream(outZipPath);
+            ZipOutputStream zos = new ZipOutputStream(fos);
+            File srcFile = new File(inputFolderPath);
+            File[] files = srcFile.listFiles();
+            Log.d("", "Zip directory: " + srcFile.getName());
+            for (int i = 0; i < files.length; i++) {
+                Log.d("", "Adding file: " + files[i].getName());
+                byte[] buffer = new byte[1024];
+                FileInputStream fis = new FileInputStream(files[i]);
+                zos.putNextEntry(new ZipEntry(files[i].getName()));
+                int length;
+                while ((length = fis.read(buffer)) > 0) {
+                    zos.write(buffer, 0, length);
+                }
+                zos.closeEntry();
+                fis.close();
+            }
+            zos.close();
+        } catch (IOException ioe) {
+            Log.e("", ioe.getMessage());
+        }
     }
 
 
