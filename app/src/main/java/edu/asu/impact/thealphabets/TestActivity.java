@@ -110,8 +110,8 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
     private static final String COMMA_DELIMITER = ",";
     private static final String NEW_LINE_SEPARATOR = "\n";
 
-
-
+    private DownloadFromServer downloadTask;
+    public AlphabetMatcher match;
     TextToSpeech t1;
     int classNumber = 0;
 
@@ -122,7 +122,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
         setContentView(R.layout.activity_test);
         mTextView = (TextView) findViewById(R.id.text);
 
-        SDCARD_LOCATION = Environment.getExternalStorageDirectory().getAbsolutePath();
+        SDCARD_LOCATION =  getApplicationContext().getExternalFilesDir(null).getAbsolutePath(); // Environment.getExternalStorageDirectory().getAbsolutePath();
 
         if (android.os.Build.DEVICE.contains("samsung")
                 || android.os.Build.MANUFACTURER.contains("samsung")) {
@@ -142,6 +142,12 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
             }
         }
 
+        final File checkFile = new File(SDCARD_LOCATION+ File.separator + "app_downloads"+ File.separator +LoginActivity.user);
+        if (!(checkFile.exists() && checkFile.isDirectory())) {
+            downloadTask = new DownloadFromServer(this);
+            downloadTask.execute(SDCARD_LOCATION);
+        }
+
         Intent intent = this.getIntent();
         if ((intent.getStringExtra("DeviceName") != null)){
 
@@ -155,8 +161,8 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
             mMyoConnector.scan(5000, mScannerCallback);
             myoConnection = true;
 
-            CurrentfilePath = SDCARD_LOCATION;
-            System.out.print(CurrentfilePath);
+            CurrentfilePath = SDCARD_LOCATION + "/Test/" +LoginActivity.user;;
+
             File isPath = new File(CurrentfilePath);
             if (!isPath.isDirectory())
                 isPath.mkdirs();
@@ -221,6 +227,8 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
 
                 Toast.makeText(getApplicationContext(),"Recording MYO Data for 5 seconds",Toast.LENGTH_LONG).show();
                 testButton.setEnabled(false);
+                // commented by gautam
+                /*
                 Log.d("Demo", "onClick: starting srvice");
                 new Thread(new Runnable() {
                     public void run() {
@@ -234,7 +242,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
                     }
                 }).start();
                 //Toast.makeText(TestActivity.this, "Data Uploading", Toast.LENGTH_SHORT).show();
-
+                */
 
                 ImageView image;
                 image = (ImageView) findViewById(R.id.imageViewTest);
@@ -251,9 +259,9 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
                         WriteMode = false;
                         testButton.setEnabled(true);
 
-                        System.out.print("EMG SIZE" + emgDataList0.size());
 
-                        if (emgDataList0.size() >= 250) {
+
+                        if (accelerometerXData.size() >= 250) {
 
                             attempt++;
 
@@ -294,10 +302,18 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
 
                             //saveFileName = CurrentfilePath + "/" + "shibani" + "_alphabets_" + selected + "_" + attempt;
                             savedMyoFile = saveMyoData();
+                            match = new AlphabetMatcher(savedMyoFile);
+                            File featureFile = new File(SDCARD_LOCATION+ File.separator + "app_downloads"+ File.separator +LoginActivity.user+File.separator+"feature_selection_working.csv");
+                            match.readFile(featureFile,1);
+                            double probAlphabets[] = match.checkAlphabet();
                         }
-
+                        else
+                            Toast.makeText(getApplicationContext(), "Not enough data, re-record", Toast.LENGTH_LONG).show();
 
                     }
+                    //here call AlphabetMatcher
+
+
                 }, 5000);
 
             }
@@ -338,6 +354,8 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
                     bw.write(Double.toString(accelerometerXData.get(i)));
                     bw.write(COMMA_DELIMITER);
                     bw.write(Double.toString(accelerometerYData.get(i)));
+                    bw.write(COMMA_DELIMITER);
+                    bw.write(Double.toString(accelerometerZData.get(i)));
                     bw.write(COMMA_DELIMITER);
                     bw.write(Double.toString(gyroscopeXData.get(i)));
                     bw.write(COMMA_DELIMITER);
@@ -821,12 +839,18 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
                             mImuProcessor.addListener(new ImuProcessor.ImuDataListener() {
                                 @Override
                                 public void onNewImuData(ImuData imuData) {
-                                    String saveTime = Long.toString(System.currentTimeMillis());
-
                                     if (WriteMode) {
-                                        IMUDataset.put(saveTime, ImuData.format(imuData.getOrientationData()) + ImuData.format(imuData.getAccelerometerData()) + ImuData.format(imuData.getGyroData()));
+                                        accelerometerXData.add(imuData.getAccelerometerData()[0]);
+                                        accelerometerYData.add(imuData.getAccelerometerData()[1]);
+                                        accelerometerZData.add(imuData.getAccelerometerData()[2]);
+                                        gyroscopeXData.add(imuData.getGyroData()[0]);
+                                        gyroscopeYData.add(imuData.getGyroData()[1]);
+                                        gyroscopeZData.add(imuData.getGyroData()[2]);
+                                        orientationWData.add(imuData.getOrientationData()[0]);
+                                        orientationXData.add(imuData.getOrientationData()[1]);
+                                        orientationYData.add(imuData.getOrientationData()[2]);
+                                        orientationZData.add(imuData.getOrientationData()[3]);
                                     }
-
                                 }
                             });
 
@@ -835,21 +859,22 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
                             mEmgProcessor.addListener(new EmgProcessor.EmgDataListener() {
                                 @Override
                                 public void onNewEmgData(EmgData emgData) {
-                                    //if (System.currentTimeMillis() - mLastEmgUpdate > 100) {
-                                    String saveTime = Long.toString(System.currentTimeMillis());
-                                    String eData = Arrays.toString( emgData.getData() );
                                     if (WriteMode){
-                                        //Log.d("emg data: ",eData);
-                                        EMGDataset.put(saveTime, eData);
+                                        emgDataList0.add(Byte.valueOf(emgData.getData()[0]));
+                                        emgDataList1.add(Byte.valueOf(emgData.getData()[1]));
+                                        emgDataList2.add(Byte.valueOf(emgData.getData()[2]));
+                                        emgDataList3.add(Byte.valueOf(emgData.getData()[3]));
+                                        emgDataList4.add(Byte.valueOf(emgData.getData()[4]));
+                                        emgDataList5.add(Byte.valueOf(emgData.getData()[5]));
+                                        emgDataList6.add(Byte.valueOf(emgData.getData()[6]));
+                                        emgDataList7.add(Byte.valueOf(emgData.getData()[7]));
                                     }
-                                    //mLastEmgUpdate = System.currentTimeMillis();
-                                    //}
+
                                 }
                             });
 
                         }
 
-                        StartMode = true;
                     }
 
                 }

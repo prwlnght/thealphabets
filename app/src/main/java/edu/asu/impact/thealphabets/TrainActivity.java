@@ -101,7 +101,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
         mTextView = (TextView) findViewById(R.id.text);
 
-        attempt = 0;
+        attempt = 1;
 
         SDCARD_LOCATION = getApplicationContext().getExternalFilesDir(null).getAbsolutePath();//Environment.getExternalStorageDirectory().getAbsolutePath();
 
@@ -127,7 +127,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
         Intent intent = this.getIntent();
 
-        if ( (intent.getStringExtra("DeviceName") != null)){ //true
+        if ( (intent.getStringExtra("DeviceName") != null)){ //
 
             String DeviceName = intent.getStringExtra("DeviceName");
             DeviceAddress =intent.getStringExtra("DeviceAddress");
@@ -163,8 +163,8 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
             @Override
             public void onClick(View view) {
 
-
-                Toast.makeText(getApplicationContext(), "Recording MYO Data for 5 seconds", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Attempt_"+selected+" "+attempt, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "Recording MYO Data for 5 seconds", Toast.LENGTH_LONG).show();
                 trainButton.setEnabled(false);
                 WriteMode = true;
 
@@ -210,7 +210,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                                 yaw.add(yaw_rad);
                             }
 
-                            saveFileName = CurrentfilePath + "/" + LoginActivity.user+ "_alphabets_" + selected + "_" + attempt;
+                            saveFileName = CurrentfilePath + "/" + "alphabets_" + selected + "_" + attempt;
                             //System.out.print("ACCELEROMETER SIZE" + accelerometerXData.size());
 
                             //System.out.println("Acclerometer x:" + accelerometerXData.get(0) + " y:" + accelerometerYData.get(0) + " z:" + accelerometerZData.get(0));
@@ -369,6 +369,9 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
         zipFolder(CurrentfilePath,zipFilePath); //SDCARD_LOCATION
         uploadTask = new uploadtoserver(this);
         uploadTask.execute(SDCARD_LOCATION);
+
+        Intent intent = new Intent(this, TestActivity.class);
+        startActivity(intent);
     }
 
     private static void zipFolder(String inputFolderPath, String outZipPath) {

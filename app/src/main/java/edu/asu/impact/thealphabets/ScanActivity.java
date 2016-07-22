@@ -53,7 +53,7 @@ public class ScanActivity extends AppCompatActivity  {
     @Override
     public void onResume() {
         mAdapter.clear();
-        mMyoConnector.scan(2000, mScannerCallback);
+        mMyoConnector.scan(5000, mScannerCallback);
         super.onResume();
     }
 
