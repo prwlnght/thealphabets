@@ -24,7 +24,7 @@
         android:id="@+id/alphabets"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="52dp"
         android:background="@android:drawable/btn_dropdown"
         android:spinnerMode="dropdown"
         android:layout_below="@+id/textViewAlphabets"
@@ -43,7 +43,7 @@
         android:id="@+id/textViewAlphabets"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="33dp"
+        android:layout_marginTop="22dp"
         android:typeface="serif"
         android:text="Choose a character to train"
         android:textAppearance="?android:attr/textAppearanceMedium"
@@ -71,6 +71,17 @@
         android:onClick="onDone"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:max="5"
+        android:layout_below="@+id/textViewAlphabets"
+        android:layout_marginTop="28dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true" />
 
 
 </RelativeLayout>

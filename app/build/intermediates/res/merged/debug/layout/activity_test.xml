@@ -55,6 +55,21 @@
         android:layout_centerHorizontal="true"
         android:text="Incorrect" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Letter Detected:"
+        android:id="@+id/textView"
+        android:layout_below="@+id/imageViewTest"
+        android:layout_alignEnd="@+id/text" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView2"
+        android:layout_alignBottom="@+id/textView"
+        android:layout_alignStart="@+id/correct"
+        android:layout_alignTop="@+id/textView" />
 
 
 </RelativeLayout>

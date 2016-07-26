@@ -35,7 +35,7 @@ import javax.net.ssl.X509TrustManager;
  * Created by Gautam on 6/30/2016.
  */
 
-public class uploadtoserver extends AsyncTask<String, String, String> {
+public class uploadtoserver extends AsyncTask<String, String, Integer> {
 
     Activity mParentActivity;
     ProgressDialog progressDialog;
@@ -54,7 +54,7 @@ public class uploadtoserver extends AsyncTask<String, String, String> {
     }
 
     @Override
-    protected String doInBackground(String... params) {
+    protected Integer doInBackground(String... params) {
 
         // Context myactivity = params[0];
         String textFile = params[0];
@@ -218,10 +218,10 @@ public class uploadtoserver extends AsyncTask<String, String, String> {
                 connection.disconnect();
         }
 
-        return null;
+        return 1;
     }
 
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(Integer result) {
         this.progressDialog.dismiss();
         if (result != null){
             Log.v("uploader", "Result: Failed");

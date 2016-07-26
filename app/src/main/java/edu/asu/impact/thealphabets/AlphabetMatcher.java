@@ -151,7 +151,18 @@ public class AlphabetMatcher {
         return weights;
     }
 
+    String WeightSorter(double[] weights){
+        double max =-1000;
+        int index=0;
+        for(int i=0;i<26;i++){
+            if(weights[i] > max){
+                max = weights[i];
+                index = i;
+            }
+        }
 
+        return String.valueOf(Character.toChars(65+index));
+    }
 
 
 }

@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
     private int attempt;
     private String selected;
     private File savedMyoFile = null;
+    private ProgressBar Pbar;
 
 
     private List<Double> accelerometerXData = new ArrayList<Double>();
@@ -100,6 +102,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
         setContentView(R.layout.activity_train);
 
         mTextView = (TextView) findViewById(R.id.text);
+        Pbar = (ProgressBar)findViewById(R.id.progressBar) ;
 
         attempt = 1;
 
@@ -180,7 +183,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                         System.out.print("ACCELEROMETER SIZE" + accelerometerXData.size());
 
                         if (accelerometerXData.size() >= 250) {
-
+                            Pbar.setProgress(attempt);
                             attempt++;
 
                             if (attempt > 5) //to ensure that only 5 iterations are stored for each Alphabet per user
@@ -223,7 +226,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
                         }
                         else
                             Toast.makeText(getApplicationContext(), "Not enough data, re-record", Toast.LENGTH_LONG).show();
-
+                            clearLists();
                     }
                 }, 5000);
 
@@ -303,13 +306,38 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
     };
 
+    public void clearLists(){
+        emgDataList0.clear();
+        emgDataList1.clear();
+        emgDataList2.clear();
+        emgDataList3.clear();
+        emgDataList4.clear();
+        emgDataList5.clear();
+        emgDataList6.clear();
+        emgDataList7.clear();
+
+        accelerometerXData.clear();
+        accelerometerYData.clear();
+        accelerometerZData.clear();
+
+        gyroscopeXData.clear();
+        gyroscopeYData.clear();
+        gyroscopeZData.clear();
+
+        orientationWData.clear();
+        orientationXData.clear();
+        orientationYData.clear();
+        orientationZData.clear();
+
+    }
+
     public File saveMyoData() {
 
         String filePath = saveFileName + ".csv";
 
         File myoData = new File(filePath);
 
-        if (!myoData.exists()) {
+
             try {
                 myoData.createNewFile();
                 FileWriter fw = new FileWriter(myoData.getAbsoluteFile(),false);
@@ -357,8 +385,8 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
 
+        clearLists();
 
         File returnFile = myoData;
         return returnFile;
@@ -370,8 +398,8 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
         uploadTask = new uploadtoserver(this);
         uploadTask.execute(SDCARD_LOCATION);
 
-        Intent intent = new Intent(this, TestActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this, TestActivity.class);
+        //startActivity(intent);
     }
 
     private static void zipFolder(String inputFolderPath, String outZipPath) {
@@ -405,7 +433,8 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
         ImageView image;
         image = (ImageView) findViewById(R.id.imageView);
         image.setScaleType(ImageView.ScaleType.FIT_CENTER);
-
+        Pbar.setProgress(0);
+        attempt =1;
 
         if (parent.getItemAtPosition(pos).toString() == "A") {
             image.setImageResource(R.drawable.ic_alphabeta);

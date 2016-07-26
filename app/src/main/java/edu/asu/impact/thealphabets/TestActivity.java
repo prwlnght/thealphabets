@@ -62,6 +62,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
     private Button testButton, correctButton, incorrectButton;
     String DATABASE_LOCATION, SDCARD_LOCATION;
     private TextView mTextView;
+    private TextView LetterText;
     TextToSpeech t2;
     TextToSpeech t3;
     String correct="..correct";
@@ -121,7 +122,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         mTextView = (TextView) findViewById(R.id.text);
-
+        LetterText = (TextView) findViewById(R.id.textView2) ;
         SDCARD_LOCATION =  getApplicationContext().getExternalFilesDir(null).getAbsolutePath(); // Environment.getExternalStorageDirectory().getAbsolutePath();
 
         if (android.os.Build.DEVICE.contains("samsung")
@@ -306,9 +307,15 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
                             File featureFile = new File(SDCARD_LOCATION+ File.separator + "app_downloads"+ File.separator +LoginActivity.user+File.separator+"feature_selection_working.csv");
                             match.readFile(featureFile,1);
                             double probAlphabets[] = match.checkAlphabet();
+                            String Letter = match.WeightSorter(probAlphabets);
+                            LetterText.setText(Letter);
+                            clearLists();
+
                         }
-                        else
+                        else {
                             Toast.makeText(getApplicationContext(), "Not enough data, re-record", Toast.LENGTH_LONG).show();
+                            clearLists();
+                        }
 
                     }
                     //here call AlphabetMatcher
@@ -327,7 +334,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
 
         File myoData = new File(filePath);
 
-        if (!myoData.exists()) {
+
             try {
                 myoData.createNewFile();
                 FileWriter fw = new FileWriter(myoData.getAbsoluteFile(),false);
@@ -375,13 +382,37 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+
 
 
         File returnFile = myoData;
         return returnFile;
     }
 
+    public void clearLists(){
+        emgDataList0.clear();
+        emgDataList1.clear();
+        emgDataList2.clear();
+        emgDataList3.clear();
+        emgDataList4.clear();
+        emgDataList5.clear();
+        emgDataList6.clear();
+        emgDataList7.clear();
+
+        accelerometerXData.clear();
+        accelerometerYData.clear();
+        accelerometerZData.clear();
+
+        gyroscopeXData.clear();
+        gyroscopeYData.clear();
+        gyroscopeZData.clear();
+
+        orientationWData.clear();
+        orientationXData.clear();
+        orientationYData.clear();
+        orientationZData.clear();
+
+    }
 
 
     @Override

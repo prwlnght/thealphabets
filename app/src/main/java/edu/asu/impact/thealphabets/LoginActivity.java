@@ -74,7 +74,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Login Successful", Toast.LENGTH_SHORT).show();
             mAuthTask = true;
             user = email;
-            Intent intent = new Intent(this, TestActivity.class); //TrainActivity
+            Intent intent = new Intent(this, TrainActivity.class); //TrainActivity
             startActivity(intent);
 
         }
