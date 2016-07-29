@@ -95,7 +95,7 @@ public class DownloadFromServer extends AsyncTask<String, Integer , String> {
         try {
             String pathToOurFile = params[0];
             String NameofFile = "feature_selection_working.csv";
-            String url_string = "https://192.168.43.72/test/uploads" + File.separator + LoginActivity.user + File.separator+"features"+File.separator+NameofFile; //"https://impact.asu.edu/Appenstance"+ File.separator+NameofFile;
+            String url_string = "https://10.218.110.136/test/uploads" + File.separator + LoginActivity.user + File.separator+"features"+File.separator+NameofFile; //"https://impact.asu.edu/Appenstance"+ File.separator+NameofFile;
             URL url = new URL(url_string);// sUrl[0]
             connection = (HttpsURLConnection) url.openConnection(); //https
 

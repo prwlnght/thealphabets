@@ -58,6 +58,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
     private Myo CurrentMyo;
     private boolean myoConnection = false;
     private Button trainButton;
+    private Button DoneButton;
     private int attempt;
     private String selected;
     private File savedMyoFile = null;
@@ -103,6 +104,9 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
         mTextView = (TextView) findViewById(R.id.text);
         Pbar = (ProgressBar)findViewById(R.id.progressBar) ;
+        DoneButton = (Button)findViewById(R.id.doneButton) ;
+
+        DoneButton.setEnabled(false);
 
         attempt = 1;
 
@@ -149,7 +153,12 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
             if (!isPath.isDirectory())
                 isPath.mkdirs();
 
-
+            int numberOfFiles = checkFiles();
+            if(numberOfFiles == (5*26)){
+                DoneButton.setEnabled(true);
+            }else{
+                DoneButton.setEnabled(false);
+            }
         }
         else
             mTextView.setTextColor(Color.RED);
@@ -184,7 +193,7 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
                         if (accelerometerXData.size() >= 250) {
                             Pbar.setProgress(attempt);
-                            attempt++;
+
 
                             if (attempt > 5) //to ensure that only 5 iterations are stored for each Alphabet per user
                                 attempt = 1;
@@ -223,6 +232,11 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
 
                             //saveFileName = CurrentfilePath + "/" + "shibani" + "_alphabets_" + selected + "_" + attempt;
                             savedMyoFile = saveMyoData();
+                            int numberOfFiles = checkFiles();
+                            if(numberOfFiles == (5*26)){
+                                DoneButton.setEnabled(true);
+                            }
+                            attempt++;
                         }
                         else
                             Toast.makeText(getApplicationContext(), "Not enough data, re-record", Toast.LENGTH_LONG).show();
@@ -427,6 +441,17 @@ public class TrainActivity extends AppCompatActivity implements AdapterView.OnIt
         }
     }
 
+    public int checkFiles(){
+        File file=new File(CurrentfilePath);
+        File[] list = file.listFiles();
+        int count = 0;
+        for (File f: list){
+            String name = f.getName();
+            if (name.endsWith(".csv"))
+                count++;
+        }
+        return count;
+    }
 
 
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {

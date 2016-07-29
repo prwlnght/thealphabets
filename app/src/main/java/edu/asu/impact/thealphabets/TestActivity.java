@@ -81,7 +81,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
     private String CurrentfilePath;
     private Myo CurrentMyo;
     private boolean myoConnection = false;
-    private int attempt;
+    private int attempt ;
     private File savedMyoFile = null;
     private String selected;
 
@@ -116,7 +116,6 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
     TextToSpeech t1;
     int classNumber = 0;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +123,8 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
         mTextView = (TextView) findViewById(R.id.text);
         LetterText = (TextView) findViewById(R.id.textView2) ;
         SDCARD_LOCATION =  getApplicationContext().getExternalFilesDir(null).getAbsolutePath(); // Environment.getExternalStorageDirectory().getAbsolutePath();
+        attempt =1;
+
 
         if (android.os.Build.DEVICE.contains("samsung")
                 || android.os.Build.MANUFACTURER.contains("samsung")) {
@@ -264,7 +265,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
 
                         if (accelerometerXData.size() >= 250) {
 
-                            attempt++;
+
 
                             if (attempt > 5) //to ensure that only 5 iterations are stored for each Alphabet per user
                                 attempt = 1;
@@ -310,6 +311,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
                             String Letter = match.WeightSorter(probAlphabets);
                             LetterText.setText(Letter);
                             clearLists();
+                            attempt++;
 
                         }
                         else {
@@ -466,7 +468,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
     };
 
     int serverResponseCode = 0;
-
+    /*
     // String upLoadServerUri = null;
     final String upLoadServerUri = "http://10.143.108.143/UploadToServer.php";
     //String upLoadServerUri = "https://impact.asu.edu/Appenstance/UploadToServer.php";
@@ -618,7 +620,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
 
     }
 
-
+    */
 
 
     public void setImage(String alpha1) {
@@ -751,7 +753,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
         }
     }
 
-
+    /*
     void downloadFile(String destFileUri){
         int downloadedSize = 0;
         int totalSize = 0;
@@ -842,7 +844,7 @@ public class TestActivity extends AppCompatActivity implements Myo.BatteryCallba
             }
         });
     }
-
+    */
     private MyoConnector.ScannerCallback mScannerCallback = new MyoConnector.ScannerCallback() {
         @Override
         public void onScanFinished(final List<Myo> myos) {

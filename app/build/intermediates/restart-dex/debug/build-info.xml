@@ -4,26 +4,34 @@
     api-level="21"
     density="xxhdpi"
     format="7"
-    timestamp="434401330435923" >
+    timestamp="695085622671411" >
 
     <task
         name="javac"
-        duration="0" />
+        duration="1006" />
     <task
         name="instant-run-dex"
         duration="0" />
     <task
         name="instant-run-transform"
-        duration="0" />
+        duration="311" />
     <task
         name="verifier"
-        duration="0" />
+        duration="204" />
 
-    <build timestamp="434374237398765" >
+    <artifact
+        location="D:\study\c study\thesis\prajwal\thealphabets\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_4\classes.dex"
+        type="DEX" />
+
+    <build timestamp="694812789585902" >
         <artifact
             location="D:\study\c study\thesis\prajwal\thealphabets\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
     </build>
-    <build timestamp="434401330435923" />
+    <build timestamp="695085622671411" >
+        <artifact
+            location="D:\study\c study\thesis\prajwal\thealphabets\app\build\intermediates\transforms\dex\debug\folders\1000\5\slice_4\classes.dex"
+            type="DEX" />
+    </build>
 
 </instant-run>

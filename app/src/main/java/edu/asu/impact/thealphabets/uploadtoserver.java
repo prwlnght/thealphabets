@@ -67,7 +67,7 @@ public class uploadtoserver extends AsyncTask<String, String, Integer> {
         DataInputStream inputStream = null;
 
         String pathToOurFile = textFile;
-        String urlServer = "https://192.168.43.72/test/UploadToServer.php";//"https://impact.asu.edu/Appenstance/UploadToServerGPS.php";
+        String urlServer = "https://10.218.110.136/test/UploadToServer.php"; //"https://192.168.43.72/test/UploadToServer.php";//"https://impact.asu.edu/Appenstance/UploadToServerGPS.php";
         String lineEnd = "\r\n";
         String twoHyphens = "--";
         String boundary =  "*****";
