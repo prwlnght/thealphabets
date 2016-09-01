@@ -36,7 +36,8 @@ public class LoginActivity extends AppCompatActivity {
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                //attemptLogin();
+                bypass();
             }
         });
 
@@ -59,9 +60,9 @@ public class LoginActivity extends AppCompatActivity {
 
             focusView.requestFocus();
         } else {
-
             //Toast.makeText(this, "Attempt Login", Toast.LENGTH_SHORT).show();
             new RetrieveFeedTaskImpl().execute("http://10.143.108.143/" + email);
+
 
         }
     }
@@ -157,4 +158,8 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    public void bypass(){
+        Intent intent = new Intent(this, TrainActivity.class);
+        startActivity(intent);
+    }
 }
